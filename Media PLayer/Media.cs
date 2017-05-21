@@ -1,7 +1,4 @@
-﻿using System.Windows.Forms;
-using WMPLib;
-
-namespace Media_PLayer
+﻿namespace Media_PLayer
 {
     public abstract class Media
     {

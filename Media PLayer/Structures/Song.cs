@@ -43,7 +43,7 @@ namespace Media_PLayer.Structures
             {
                 formatedName = Title;
             }
-            return String.Format("{0,2}.{1, -30}{2, 30}", Number, formatedName, duration ); 
+            return $"{Number,2}.{formatedName,-30}{duration,30}"; 
         }
 
         public override bool Equals(object obj)

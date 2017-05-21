@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnPlay = new System.Windows.Forms.Button();
             this.pbAlbumCover = new System.Windows.Forms.PictureBox();
@@ -43,16 +44,22 @@
             this.lbOpenedFiles = new System.Windows.Forms.ListBox();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
+            this.btnPrevious = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.scrollBar = new System.Windows.Forms.VScrollBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblVolume = new System.Windows.Forms.Label();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbAlbumCover)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(53, 436);
+            this.btnPlay.Location = new System.Drawing.Point(24, 427);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(119, 41);
+            this.btnPlay.Size = new System.Drawing.Size(96, 24);
             this.btnPlay.TabIndex = 1;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -76,7 +83,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(821, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(877, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -104,13 +111,14 @@
             this.openFilesToolStripMenuItem.Name = "openFilesToolStripMenuItem";
             this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openFilesToolStripMenuItem.Text = "Open Files";
-            this.openFilesToolStripMenuItem.Click += new System.EventHandler(this.openFilesToolStripMenuItem_Click);
+            this.openFilesToolStripMenuItem.Click += new System.EventHandler(this.OpenFilesToolStripMenuItem_Click);
             // 
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
             this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
+            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderToolStripMenuItem_Click);
             // 
             // openRecentToolStripMenuItem
             // 
@@ -141,38 +149,97 @@
             // lbOpenedFiles
             // 
             this.lbOpenedFiles.FormattingEnabled = true;
-            this.lbOpenedFiles.Location = new System.Drawing.Point(521, 40);
+            this.lbOpenedFiles.Location = new System.Drawing.Point(597, 40);
             this.lbOpenedFiles.Name = "lbOpenedFiles";
-            this.lbOpenedFiles.Size = new System.Drawing.Size(288, 446);
+            this.lbOpenedFiles.Size = new System.Drawing.Size(268, 498);
             this.lbOpenedFiles.TabIndex = 6;
             // 
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.Location = new System.Drawing.Point(196, 436);
+            this.btnPause.Location = new System.Drawing.Point(211, 427);
             this.btnPause.Margin = new System.Windows.Forms.Padding(2);
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(124, 41);
+            this.btnPause.Size = new System.Drawing.Size(96, 24);
             this.btnPause.TabIndex = 7;
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(348, 436);
+            this.btnStop.Location = new System.Drawing.Point(391, 427);
             this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(124, 41);
+            this.btnStop.Size = new System.Drawing.Size(96, 24);
             this.btnStop.TabIndex = 8;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
+            // btnPrevious
+            // 
+            this.btnPrevious.Location = new System.Drawing.Point(124, 427);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(2);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(63, 24);
+            this.btnPrevious.TabIndex = 9;
+            this.btnPrevious.Text = "Previous";
+            this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(323, 427);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(2);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(63, 24);
+            this.btnNext.TabIndex = 10;
+            this.btnNext.Text = "Next";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // scrollBar
+            // 
+            this.scrollBar.LargeChange = 1;
+            this.scrollBar.Location = new System.Drawing.Point(500, 246);
+            this.scrollBar.Name = "scrollBar";
+            this.scrollBar.Size = new System.Drawing.Size(23, 205);
+            this.scrollBar.TabIndex = 11;
+            this.scrollBar.Value = 50;
+            this.scrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollBar_Scroll);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(492, 222);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Volume";
+            // 
+            // lblVolume
+            // 
+            this.lblVolume.AutoSize = true;
+            this.lblVolume.Location = new System.Drawing.Point(539, 341);
+            this.lblVolume.Name = "lblVolume";
+            this.lblVolume.Size = new System.Drawing.Size(0, 13);
+            this.lblVolume.TabIndex = 13;
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(821, 502);
+            this.ClientSize = new System.Drawing.Size(877, 548);
+            this.Controls.Add(this.lblVolume);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.scrollBar);
+            this.Controls.Add(this.btnNext);
+            this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.lbOpenedFiles);
@@ -206,6 +273,12 @@
         private System.Windows.Forms.ListBox lbOpenedFiles;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnPrevious;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.VScrollBar scrollBar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblVolume;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 
