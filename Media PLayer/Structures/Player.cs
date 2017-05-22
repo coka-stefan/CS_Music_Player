@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WMPLib;
 namespace Media_PLayer.Structures
 {
@@ -6,18 +7,37 @@ namespace Media_PLayer.Structures
     {
         private readonly WindowsMediaPlayer _player;
 
-        private double CurrentPosition { get; set; }
         private IWMPPlaylist CurrentPlayList { get; set; }
 
         private bool IsPlaying => _player.playState == WMPPlayState.wmppsPlaying;
         private bool IsPaused => _player.playState == WMPPlayState.wmppsPaused;
 
-        public Player()
+        private double CurrentPosition { get; set; }
+
+        public int CurrentMediaDuration { get; private set; }
+
+        public event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
+
+        public Player(EventHandler<CurrentMediaChangedEventArgs> mediaChangedEventHandler)
         {
             _player = new WindowsMediaPlayerClass();
             CurrentPosition = 0;
+            MediaChanged = mediaChangedEventHandler;
+            _player.OpenStateChange += _player_OpenStateChange;
+            _player.MediaChange += _player_MediaChange;
         }
-        
+
+        private void _player_MediaChange(object Item)
+        {
+            OnMediaChanged(new CurrentMediaChangedEventArgs((int) _player.currentMedia.duration, _player.currentMedia.sourceURL));
+        }
+
+        private void _player_OpenStateChange(int newState)
+        {
+            if (newState == (int) WMPOpenState.wmposMediaOpen)
+                CurrentMediaDuration = (int) _player.currentMedia.duration;
+        }
+
         public void PlayMusicFiles(List<MusicFile> songs, bool newPlaylist)
         {
             Stop();
@@ -40,7 +60,8 @@ namespace Media_PLayer.Structures
                     i++;
                 _player.controls.playItem(_player.currentPlaylist.Item[i]);
             }
-            else {
+            else
+            {
                 CurrentPosition = 0;
                 _player.URL = song.PathToFile;
                 _player.controls.play();
@@ -48,23 +69,26 @@ namespace Media_PLayer.Structures
         }
 
        private void Resume(double position)
-        {
+       {
             _player.controls.currentPosition = position;
             _player.controls.play();
-        }
+       }
 
 
-        public void Pause()
+        public bool Pause()
         {
             if (IsPlaying)
             {
                 _player.controls.pause();
                 CurrentPosition = _player.controls.currentPosition;
+                return true;
             }
-            else if (IsPaused)
+            if (IsPaused)
             {
                 Resume(CurrentPosition);
+                return false;
             }
+            return false;
         }
 
         public void Stop()
@@ -111,12 +135,25 @@ namespace Media_PLayer.Structures
             _player.controls.play();
         }
 
+        public void SetCurrentPosition(double position)
+        {
+            if (IsPlaying)
+            {
+                _player.controls.currentPosition = position;
+            }
+        }
+
         public void Clear()
         {
             Stop();
             _player.currentPlaylist.clear();
             CurrentPosition = 0;
             CurrentPlayList = null;
+        }
+
+        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
+        {
+            MediaChanged?.Invoke(this, e);
         }
     }
 }

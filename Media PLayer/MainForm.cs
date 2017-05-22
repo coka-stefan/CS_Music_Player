@@ -13,20 +13,33 @@ namespace Media_PLayer
         private Media CurrentMedia { get; set; }
         private Player Player { get; set; }
 
+        private Dictionary<string, int> UrlToIndex { get; set; }
+
+        private event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
+
+        private Timer Timer { get; }
+
         public MainForm()
         {
             InitializeComponent();
-            Player = new Player();
-            lblVolume.Text = scrollBar.Value.ToString();
+            UrlToIndex = new Dictionary<string, int>();
+            lblVolume.Text = tbVolume.Value.ToString();
+            MediaChanged += MainForm_MediaChanged;
+            Player = new Player(MediaChanged);
+            Player.SetVolume(tbVolume.Value);
+            Timer = new Timer() {Interval = 1000};
+            Timer.Tick += Timer_Tick;
         }
-
+            
         private void OpenMusicFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            UrlToIndex.Clear();
             OpenMusicFile();
         }
 
         private void OpenFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            UrlToIndex.Clear();
             OpenFileDialog ofd = new OpenFileDialog
             {
                 Filter =
@@ -40,6 +53,7 @@ namespace Media_PLayer
 
         private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            UrlToIndex.Clear();
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             if (fbd.ShowDialog() != DialogResult.OK) return;
             var files = Directory.GetFiles(fbd.SelectedPath).ToList();
@@ -67,6 +81,7 @@ namespace Media_PLayer
                 };
                 lbOpenedFiles.Items.Add(newMedia);
                 openedFiles.Add(newMedia);
+                UrlToIndex.Add(newMedia.Url, lbOpenedFiles.Items.Count - 1);
             }
             Player.PlayMusicFiles(openedFiles, true);
         }
@@ -92,6 +107,7 @@ namespace Media_PLayer
             });
             CurrentMedia = newMedia;
             lbOpenedFiles.Items.Add(newMedia);
+            UrlToIndex.Add(newMedia.Url, 0);
             Player.PlayMusicFile(CurrentMedia);
         }
 
@@ -103,9 +119,7 @@ namespace Media_PLayer
                     .FirstOrDefault(file => file.EndsWith(".jpg") || file.EndsWith(".png") || file.EndsWith(".bmp"));
             });
         }
-
-
-
+        
         private static bool IsSong(string file)
         {
             return file.EndsWith(".mp3") || file.EndsWith(".flac") || file.EndsWith(".wav");
@@ -129,17 +143,26 @@ namespace Media_PLayer
             else if (lbOpenedFiles.Items.Count > 0)
             {
                 Player.PlayMusicFile(lbOpenedFiles.Items[0] as Media);
+                CurrentMedia = lbOpenedFiles.Items[0] as Media;
             }
         }
 
         private void btnPause_Click(object sender, EventArgs e)
         {
-            Player.Pause();
+            if(Player.Pause())
+                Timer.Stop();
+            else Timer.Start();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            Player.Stop();
+            if (lbOpenedFiles.Items.Count > 0)
+            {
+                Player.Stop();
+                tbProgress.Value = 0;
+                Timer.Stop();
+                lbOpenedFiles.SetSelected(lbOpenedFiles.SelectedIndex, false);
+            }
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
@@ -152,12 +175,37 @@ namespace Media_PLayer
             Player.Next();
         }
 
-        private void scrollBar_Scroll(object sender, ScrollEventArgs e)
+        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
         {
-            Player.SetVolume(100 - e.NewValue);
-            lblVolume.Text = (100 - e.NewValue).ToString();
+            MediaChanged?.Invoke(this, e);
         }
 
-       
+        private void MainForm_MediaChanged(object sender, CurrentMediaChangedEventArgs e)
+        {
+            tbProgress.Value = 0;
+            tbProgress.Maximum = e.NewMediaDuration;
+            lbOpenedFiles.SetSelected(UrlToIndex[e.Url], true);
+            Timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (tbProgress.Value + 1 < tbProgress.Maximum)
+                tbProgress.Value++;
+            else Timer.Stop();
+           
+        }
+
+        private void tbVolume_Scroll(object sender, EventArgs e)
+        {
+            Player.SetVolume(tbVolume.Value);
+            lblVolume.Text = tbVolume.Value.ToString();
+            pbVolume.Value = tbVolume.Value;
+        }
+
+        private void tbProgress_Scroll(object sender, EventArgs e)
+        {
+            Player.SetCurrentPosition(tbProgress.Value);
+        }
     }
 }

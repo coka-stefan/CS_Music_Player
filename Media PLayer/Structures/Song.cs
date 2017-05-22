@@ -13,6 +13,7 @@ namespace Media_PLayer.Structures
 
         //  public enum Rating { get; set; }
 
+        public int Duration => Length.Minutes * 60 + Length.Seconds;
 
         public Song(string url, string title, string[] genres, uint trackNumber, TimeSpan length)
         {

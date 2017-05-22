@@ -46,17 +46,21 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
-            this.scrollBar = new System.Windows.Forms.VScrollBar();
             this.label1 = new System.Windows.Forms.Label();
             this.lblVolume = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.tbVolume = new System.Windows.Forms.TrackBar();
+            this.pbVolume = new System.Windows.Forms.ProgressBar();
+            this.tbProgress = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.pbAlbumCover)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).BeginInit();
             this.SuspendLayout();
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(24, 427);
+            this.btnPlay.Location = new System.Drawing.Point(69, 429);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(96, 24);
@@ -70,7 +74,7 @@
             this.pbAlbumCover.Location = new System.Drawing.Point(24, 40);
             this.pbAlbumCover.Margin = new System.Windows.Forms.Padding(2);
             this.pbAlbumCover.Name = "pbAlbumCover";
-            this.pbAlbumCover.Size = new System.Drawing.Size(463, 383);
+            this.pbAlbumCover.Size = new System.Drawing.Size(556, 385);
             this.pbAlbumCover.TabIndex = 4;
             this.pbAlbumCover.TabStop = false;
             // 
@@ -83,7 +87,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(877, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(898, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -151,13 +155,13 @@
             this.lbOpenedFiles.FormattingEnabled = true;
             this.lbOpenedFiles.Location = new System.Drawing.Point(597, 40);
             this.lbOpenedFiles.Name = "lbOpenedFiles";
-            this.lbOpenedFiles.Size = new System.Drawing.Size(268, 498);
+            this.lbOpenedFiles.Size = new System.Drawing.Size(289, 537);
             this.lbOpenedFiles.TabIndex = 6;
             // 
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.Location = new System.Drawing.Point(211, 427);
+            this.btnPause.Location = new System.Drawing.Point(256, 429);
             this.btnPause.Margin = new System.Windows.Forms.Padding(2);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(96, 24);
@@ -167,7 +171,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(391, 427);
+            this.btnStop.Location = new System.Drawing.Point(436, 429);
             this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(96, 24);
@@ -178,7 +182,7 @@
             // 
             // btnPrevious
             // 
-            this.btnPrevious.Location = new System.Drawing.Point(124, 427);
+            this.btnPrevious.Location = new System.Drawing.Point(169, 429);
             this.btnPrevious.Margin = new System.Windows.Forms.Padding(2);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(63, 24);
@@ -189,7 +193,7 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(323, 427);
+            this.btnNext.Location = new System.Drawing.Point(368, 429);
             this.btnNext.Margin = new System.Windows.Forms.Padding(2);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(63, 24);
@@ -198,20 +202,10 @@
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
-            // scrollBar
-            // 
-            this.scrollBar.LargeChange = 1;
-            this.scrollBar.Location = new System.Drawing.Point(500, 246);
-            this.scrollBar.Name = "scrollBar";
-            this.scrollBar.Size = new System.Drawing.Size(23, 205);
-            this.scrollBar.TabIndex = 11;
-            this.scrollBar.Value = 50;
-            this.scrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollBar_Scroll);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(492, 222);
+            this.label1.Location = new System.Drawing.Point(432, 548);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 12;
@@ -220,7 +214,7 @@
             // lblVolume
             // 
             this.lblVolume.AutoSize = true;
-            this.lblVolume.Location = new System.Drawing.Point(539, 341);
+            this.lblVolume.Location = new System.Drawing.Point(454, 519);
             this.lblVolume.Name = "lblVolume";
             this.lblVolume.Size = new System.Drawing.Size(0, 13);
             this.lblVolume.TabIndex = 13;
@@ -230,14 +224,47 @@
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             // 
+            // tbVolume
+            // 
+            this.tbVolume.LargeChange = 2;
+            this.tbVolume.Location = new System.Drawing.Point(480, 539);
+            this.tbVolume.Maximum = 100;
+            this.tbVolume.Name = "tbVolume";
+            this.tbVolume.Size = new System.Drawing.Size(104, 45);
+            this.tbVolume.TabIndex = 15;
+            this.tbVolume.Value = 50;
+            this.tbVolume.Scroll += new System.EventHandler(this.tbVolume_Scroll);
+            // 
+            // pbVolume
+            // 
+            this.pbVolume.Location = new System.Drawing.Point(480, 509);
+            this.pbVolume.MarqueeAnimationSpeed = 10;
+            this.pbVolume.Name = "pbVolume";
+            this.pbVolume.Size = new System.Drawing.Size(100, 23);
+            this.pbVolume.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pbVolume.TabIndex = 16;
+            this.pbVolume.Value = 50;
+            // 
+            // tbProgress
+            // 
+            this.tbProgress.LargeChange = 1;
+            this.tbProgress.Location = new System.Drawing.Point(24, 458);
+            this.tbProgress.Maximum = 100;
+            this.tbProgress.Name = "tbProgress";
+            this.tbProgress.Size = new System.Drawing.Size(556, 45);
+            this.tbProgress.TabIndex = 17;
+            this.tbProgress.Scroll += new System.EventHandler(this.tbProgress_Scroll);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 548);
+            this.ClientSize = new System.Drawing.Size(898, 593);
+            this.Controls.Add(this.tbProgress);
+            this.Controls.Add(this.pbVolume);
+            this.Controls.Add(this.tbVolume);
             this.Controls.Add(this.lblVolume);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.scrollBar);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.btnStop);
@@ -253,6 +280,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbAlbumCover)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,10 +304,12 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.VScrollBar scrollBar;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblVolume;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.TrackBar tbVolume;
+        private System.Windows.Forms.ProgressBar pbVolume;
+        private System.Windows.Forms.TrackBar tbProgress;
     }
 }
 

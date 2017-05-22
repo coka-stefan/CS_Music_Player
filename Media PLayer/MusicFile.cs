@@ -10,6 +10,8 @@ namespace Media_PLayer
 
         public string Url => PathToFile;
 
+        public int Duration => Song.Duration;
+
         public MusicFile(string pathToFile, uint trackNumber) : base(pathToFile)
         {
             TagLib.File file = TagLib.File.Create(pathToFile);
