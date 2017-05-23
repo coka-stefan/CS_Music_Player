@@ -157,6 +157,7 @@
             this.lbOpenedFiles.Name = "lbOpenedFiles";
             this.lbOpenedFiles.Size = new System.Drawing.Size(289, 537);
             this.lbOpenedFiles.TabIndex = 6;
+            this.lbOpenedFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbOpenedFiles_MouseDoubleClick);
             // 
             // btnPause
             // 

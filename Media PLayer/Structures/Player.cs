@@ -6,16 +6,11 @@ namespace Media_PLayer.Structures
     public class Player
     {
         private readonly WindowsMediaPlayer _player;
-
         private IWMPPlaylist CurrentPlayList { get; set; }
-
         private bool IsPlaying => _player.playState == WMPPlayState.wmppsPlaying;
         private bool IsPaused => _player.playState == WMPPlayState.wmppsPaused;
-
         private double CurrentPosition { get; set; }
-
         public int CurrentMediaDuration { get; private set; }
-
         public event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
 
         public Player(EventHandler<CurrentMediaChangedEventArgs> mediaChangedEventHandler)
@@ -27,9 +22,10 @@ namespace Media_PLayer.Structures
             _player.MediaChange += _player_MediaChange;
         }
 
-        private void _player_MediaChange(object Item)
+        private void _player_MediaChange(object item)
         {
-            OnMediaChanged(new CurrentMediaChangedEventArgs((int) _player.currentMedia.duration, _player.currentMedia.sourceURL));
+            OnMediaChanged(
+                new CurrentMediaChangedEventArgs((int) _player.controls.currentPosition, (int)_player.currentMedia.duration, _player.currentMedia.sourceURL));
         }
 
         private void _player_OpenStateChange(int newState)
@@ -70,8 +66,8 @@ namespace Media_PLayer.Structures
 
        private void Resume(double position)
        {
-            _player.controls.currentPosition = position;
-            _player.controls.play();
+           _player.controls.currentPosition = position;
+           _player.controls.play();
        }
 
 
@@ -109,9 +105,10 @@ namespace Media_PLayer.Structures
             _player.settings.volume--;
         }
 
-        public void SetVolume(int value)
+        public int Volume
         {
-            _player.settings.volume = value;
+            get { return _player.settings.volume; }
+            set { _player.settings.volume = value; }
         }
 
         public void Mute()
