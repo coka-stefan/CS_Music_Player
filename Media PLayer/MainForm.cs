@@ -1,23 +1,22 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Media_PLayer.Structures;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Media_Player.Structures;
+using Media_PLayer;
 
-namespace Media_PLayer
+namespace Media_Player
 {
     public partial class MainForm : Form
     {
         private Media CurrentMedia { get; set; }
         private Player Player { get; set; }
-
         private Dictionary<string, int> UrlToIndex { get; set; }
-
-        private event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
-
         private Timer Timer { get; }
+        private event EventHandler<CurrentMediaChangedEventArgs> MediaChanged;
+        private TimeMode TimeMode { get; set; }
 
         public MainForm()
         {
@@ -28,6 +27,7 @@ namespace Media_PLayer
             Player = new Player(MediaChanged) {Volume = tbVolume.Value};
             Timer = new Timer() {Interval = 1000};
             Timer.Tick += Timer_Tick;
+            TimeMode = TimeMode.Remaining;
         }
             
         private void OpenMusicFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,10 +83,7 @@ namespace Media_PLayer
             var openedFiles = new List<MusicFile>();
             foreach (var fileName in files)
             {
-                MusicFile newMedia = new MusicFile(fileName, (uint) lbOpenedFiles.Items.Count + 1)
-                {
-                    AlbumCover = albumCover
-                };
+                MusicFile newMedia = new MusicFile(fileName, (uint) lbOpenedFiles.Items.Count + 1) {AlbumCover = albumCover};
                 lbOpenedFiles.Items.Add(newMedia);
                 openedFiles.Add(newMedia);
                 UrlToIndex.Add(newMedia.Url, lbOpenedFiles.Items.Count - 1);
@@ -161,6 +158,7 @@ namespace Media_PLayer
                 Player.Stop();
                 Timer.Stop();
                 tbProgress.Value = 0;
+                lblEnd.Text = @"00:00";
                 lbOpenedFiles.SetSelected(lbOpenedFiles.SelectedIndex, false);
             }
         }
@@ -186,7 +184,7 @@ namespace Media_PLayer
         {
             tbProgress.Value = e.CurrentPosition;
             Timer.Start();
-            tbProgress.Maximum = e.NewMediaDuration;
+            tbProgress.Maximum = e.Duration;
             lbOpenedFiles.SetSelected(UrlToIndex[e.Url], true);
         }
 
@@ -194,7 +192,13 @@ namespace Media_PLayer
         {
             if (tbProgress.Value + 1 < tbProgress.Maximum)
                 tbProgress.Value++;
-            else Timer.Stop();
+            else
+            {
+                Timer.Stop();
+                return;
+            }
+            if (TimeMode == TimeMode.Remaining)
+                lblEnd.Text = Player.CurrentMediaTimeRemaining();
         }
 
         private void tbVolume_Scroll(object sender, EventArgs e)
@@ -214,6 +218,36 @@ namespace Media_PLayer
             if (e.Button == MouseButtons.Left && lbOpenedFiles.Items.Count > 0 && lbOpenedFiles.SelectedIndex != -1)
             {
                 Player.PlayMusicFile(lbOpenedFiles.SelectedItem as Media);
+            }
+        }
+
+        private void lblEnd_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (lbOpenedFiles.Items.Count > 0)
+            {
+                if (TimeMode == TimeMode.Remaining)
+                {
+                    TimeMode = TimeMode.Duration;
+                    lblEnd.Text = Player.CurrentMediaDurationString;
+                }
+                else
+                {
+                    TimeMode = TimeMode.Remaining;
+                }
+            }
+        }
+
+        private void btnMute_Click(object sender, EventArgs e)
+        {
+            if (!Player.Mute())
+            {
+                tbVolume.Value = 0;
+                pbVolume.Value = 0;
+            }
+            else
+            {
+                pbVolume.Value = Player.Volume;
+                tbVolume.Value = Player.Volume;
             }
         }
     }

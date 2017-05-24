@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Media_PLayer
+namespace Media_Player
 {
     static class Program
     {

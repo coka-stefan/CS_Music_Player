@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Media_PLayer.Structures;
+using Media_Player.Structures;
 
-namespace Media_PLayer
+namespace Media_Player
 {
     public class Artist
     {

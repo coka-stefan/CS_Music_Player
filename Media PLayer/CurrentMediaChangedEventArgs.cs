@@ -4,22 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Media_PLayer
+namespace Media_Player
 {
     public class CurrentMediaChangedEventArgs : EventArgs
     {
-        public int NewMediaDuration { get; set; }
+        public int Duration { get; set; }
 
         public int CurrentPosition { get; set; }
+
+        public string DurationString { get; set; }
 
         public string Url { get; set; }
 
 
 
-        public CurrentMediaChangedEventArgs(int currentPosition, int newMediaDuration, string url)
+        public CurrentMediaChangedEventArgs(int currentPosition, int duration, string durationString, string url)
         {
             CurrentPosition = currentPosition;
-            NewMediaDuration = newMediaDuration;
+            Duration = duration;
+            DurationString = durationString;
             Url = url;
         }
     }

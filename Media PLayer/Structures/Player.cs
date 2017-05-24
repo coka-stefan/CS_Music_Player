@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WMPLib;
-namespace Media_PLayer.Structures
+namespace Media_Player.Structures
 {
     public class Player
     {
@@ -10,6 +10,10 @@ namespace Media_PLayer.Structures
         private bool IsPlaying => _player.playState == WMPPlayState.wmppsPlaying;
         private bool IsPaused => _player.playState == WMPPlayState.wmppsPaused;
         private double CurrentPosition { get; set; }
+        public string CurrentMediaDurationString => _player.currentMedia.durationString;
+
+        public string CurrentPositionString => _player.controls.currentPositionString;
+
         public int CurrentMediaDuration { get; private set; }
         public event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
 
@@ -25,7 +29,7 @@ namespace Media_PLayer.Structures
         private void _player_MediaChange(object item)
         {
             OnMediaChanged(
-                new CurrentMediaChangedEventArgs((int) _player.controls.currentPosition, (int)_player.currentMedia.duration, _player.currentMedia.sourceURL));
+                new CurrentMediaChangedEventArgs((int) _player.controls.currentPosition, (int)_player.currentMedia.duration, _player.currentMedia.durationString, _player.currentMedia.sourceURL));
         }
 
         private void _player_OpenStateChange(int newState)
@@ -64,12 +68,16 @@ namespace Media_PLayer.Structures
             }
         }
 
+        public string CurrentMediaTimeRemaining()
+        {
+            return TimeSpan.FromMinutes(_player.controls.currentItem.duration - _player.controls.currentPosition).ToString().Substring(0, 5);
+        }
+
        private void Resume(double position)
        {
            _player.controls.currentPosition = position;
            _player.controls.play();
        }
-
 
         public bool Pause()
         {
@@ -111,9 +119,10 @@ namespace Media_PLayer.Structures
             set { _player.settings.volume = value; }
         }
 
-        public void Mute()
+        public bool Mute()
         {
-            _player.settings.mute = !_player.settings.mute;
+           _player.settings.mute = !_player.settings.mute;
+           return !_player.settings.mute;
         }
 
         public void Next()

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Media_PLayer.Structures
+namespace Media_Player.Structures
 {
     public class Album
     {

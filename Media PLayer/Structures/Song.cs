@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Media_PLayer.Structures
+namespace Media_Player.Structures
 {
     public class Song
     {

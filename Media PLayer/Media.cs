@@ -1,4 +1,4 @@
-﻿namespace Media_PLayer
+﻿namespace Media_Player
 {
     public abstract class Media
     {

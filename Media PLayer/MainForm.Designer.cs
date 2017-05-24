@@ -1,4 +1,4 @@
-﻿namespace Media_PLayer
+﻿namespace Media_Player
 {
     partial class MainForm
     {
@@ -52,6 +52,8 @@
             this.tbVolume = new System.Windows.Forms.TrackBar();
             this.pbVolume = new System.Windows.Forms.ProgressBar();
             this.tbProgress = new System.Windows.Forms.TrackBar();
+            this.lblEnd = new System.Windows.Forms.Label();
+            this.btnMute = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbAlbumCover)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbVolume)).BeginInit();
@@ -74,7 +76,7 @@
             this.pbAlbumCover.Location = new System.Drawing.Point(24, 40);
             this.pbAlbumCover.Margin = new System.Windows.Forms.Padding(2);
             this.pbAlbumCover.Name = "pbAlbumCover";
-            this.pbAlbumCover.Size = new System.Drawing.Size(556, 385);
+            this.pbAlbumCover.Size = new System.Drawing.Size(560, 385);
             this.pbAlbumCover.TabIndex = 4;
             this.pbAlbumCover.TabStop = false;
             // 
@@ -87,7 +89,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(898, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(916, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -153,9 +155,9 @@
             // lbOpenedFiles
             // 
             this.lbOpenedFiles.FormattingEnabled = true;
-            this.lbOpenedFiles.Location = new System.Drawing.Point(597, 40);
+            this.lbOpenedFiles.Location = new System.Drawing.Point(617, 40);
             this.lbOpenedFiles.Name = "lbOpenedFiles";
-            this.lbOpenedFiles.Size = new System.Drawing.Size(289, 537);
+            this.lbOpenedFiles.Size = new System.Drawing.Size(287, 550);
             this.lbOpenedFiles.TabIndex = 6;
             this.lbOpenedFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbOpenedFiles_MouseDoubleClick);
             // 
@@ -206,7 +208,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(432, 548);
+            this.label1.Location = new System.Drawing.Point(432, 563);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 12;
@@ -215,7 +217,7 @@
             // lblVolume
             // 
             this.lblVolume.AutoSize = true;
-            this.lblVolume.Location = new System.Drawing.Point(454, 519);
+            this.lblVolume.Location = new System.Drawing.Point(454, 534);
             this.lblVolume.Name = "lblVolume";
             this.lblVolume.Size = new System.Drawing.Size(0, 13);
             this.lblVolume.TabIndex = 13;
@@ -228,7 +230,7 @@
             // tbVolume
             // 
             this.tbVolume.LargeChange = 2;
-            this.tbVolume.Location = new System.Drawing.Point(480, 539);
+            this.tbVolume.Location = new System.Drawing.Point(480, 554);
             this.tbVolume.Maximum = 100;
             this.tbVolume.Name = "tbVolume";
             this.tbVolume.Size = new System.Drawing.Size(104, 45);
@@ -238,7 +240,7 @@
             // 
             // pbVolume
             // 
-            this.pbVolume.Location = new System.Drawing.Point(480, 509);
+            this.pbVolume.Location = new System.Drawing.Point(480, 524);
             this.pbVolume.MarqueeAnimationSpeed = 10;
             this.pbVolume.Name = "pbVolume";
             this.pbVolume.Size = new System.Drawing.Size(100, 23);
@@ -249,18 +251,41 @@
             // tbProgress
             // 
             this.tbProgress.LargeChange = 1;
-            this.tbProgress.Location = new System.Drawing.Point(24, 458);
+            this.tbProgress.Location = new System.Drawing.Point(24, 470);
             this.tbProgress.Maximum = 100;
             this.tbProgress.Name = "tbProgress";
             this.tbProgress.Size = new System.Drawing.Size(556, 45);
             this.tbProgress.TabIndex = 17;
             this.tbProgress.Scroll += new System.EventHandler(this.tbProgress_Scroll);
             // 
+            // lblEnd
+            // 
+            this.lblEnd.AutoSize = true;
+            this.lblEnd.Location = new System.Drawing.Point(577, 481);
+            this.lblEnd.Name = "lblEnd";
+            this.lblEnd.Size = new System.Drawing.Size(34, 13);
+            this.lblEnd.TabIndex = 19;
+            this.lblEnd.Text = "00:00";
+            this.lblEnd.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lblEnd_MouseClick);
+            // 
+            // btnMute
+            // 
+            this.btnMute.Location = new System.Drawing.Point(368, 554);
+            this.btnMute.Margin = new System.Windows.Forms.Padding(2);
+            this.btnMute.Name = "btnMute";
+            this.btnMute.Size = new System.Drawing.Size(48, 27);
+            this.btnMute.TabIndex = 20;
+            this.btnMute.Text = "Mute";
+            this.btnMute.UseVisualStyleBackColor = true;
+            this.btnMute.Click += new System.EventHandler(this.btnMute_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(898, 593);
+            this.ClientSize = new System.Drawing.Size(916, 602);
+            this.Controls.Add(this.btnMute);
+            this.Controls.Add(this.lblEnd);
             this.Controls.Add(this.tbProgress);
             this.Controls.Add(this.pbVolume);
             this.Controls.Add(this.tbVolume);
@@ -311,6 +336,8 @@
         private System.Windows.Forms.TrackBar tbVolume;
         private System.Windows.Forms.ProgressBar pbVolume;
         private System.Windows.Forms.TrackBar tbProgress;
+        private System.Windows.Forms.Label lblEnd;
+        private System.Windows.Forms.Button btnMute;
     }
 }
 
