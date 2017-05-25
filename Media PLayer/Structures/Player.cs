@@ -92,7 +92,7 @@ namespace Media_Player.Structures
                 Resume(CurrentPosition);
                 return false;
             }
-            return false;
+           return false;
         }
 
         public void Stop()

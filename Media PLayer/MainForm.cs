@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Media_Player.Structures;
 using Media_PLayer;
@@ -72,7 +73,7 @@ namespace Media_Player
         private void OpenMusicFiles(string[] files)
         {
             var albumCover = "";
-            var awaiter = DisplayAlbumCover(Path.GetDirectoryName(files[0])).GetAwaiter();
+            var awaiter = FindAlbumCover(Path.GetDirectoryName(files[0])).GetAwaiter();
             awaiter.OnCompleted(() =>
             {
                 albumCover = awaiter.GetResult();
@@ -94,7 +95,7 @@ namespace Media_Player
         private void OpenMusicFile(string fileName)
         {
             MusicFile newMedia = new MusicFile(fileName, (uint) lbOpenedFiles.Items.Count + 1);
-            var awaiter = DisplayAlbumCover(Path.GetDirectoryName(fileName)).GetAwaiter();
+            var awaiter = FindAlbumCover(Path.GetDirectoryName(fileName)).GetAwaiter();
             awaiter.OnCompleted(() =>
             {
                 var albumCover = awaiter.GetResult();
@@ -108,7 +109,7 @@ namespace Media_Player
             Player.PlayMusicFile(CurrentMedia);
         }
 
-        private static async Task<string> DisplayAlbumCover(string lookingDirectory)
+        private static async Task<string> FindAlbumCover(string lookingDirectory)
         {
             return await Task.Run(() =>
             {
@@ -182,10 +183,12 @@ namespace Media_Player
 
         private void MainForm_MediaChanged(object sender, CurrentMediaChangedEventArgs e)
         {
+            if (TimeMode == TimeMode.Remaining)
+                lblEnd.Text = Player.CurrentMediaTimeRemaining();
             tbProgress.Value = e.CurrentPosition;
-            Timer.Start();
             tbProgress.Maximum = e.Duration;
             lbOpenedFiles.SetSelected(UrlToIndex[e.Url], true);
+            Timer.Start();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -216,9 +219,7 @@ namespace Media_Player
         private void lbOpenedFiles_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && lbOpenedFiles.Items.Count > 0 && lbOpenedFiles.SelectedIndex != -1)
-            {
                 Player.PlayMusicFile(lbOpenedFiles.SelectedItem as Media);
-            }
         }
 
         private void lblEnd_MouseClick(object sender, MouseEventArgs e)
@@ -231,9 +232,7 @@ namespace Media_Player
                     lblEnd.Text = Player.CurrentMediaDurationString;
                 }
                 else
-                {
                     TimeMode = TimeMode.Remaining;
-                }
             }
         }
 
@@ -243,11 +242,13 @@ namespace Media_Player
             {
                 tbVolume.Value = 0;
                 pbVolume.Value = 0;
+                lblVolume.Text = @"0";
             }
             else
             {
                 pbVolume.Value = Player.Volume;
                 tbVolume.Value = Player.Volume;
+                lblVolume.Text = Player.Volume.ToString();
             }
         }
     }
