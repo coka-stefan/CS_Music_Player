@@ -89,6 +89,41 @@ namespace Media_PLayer
                 else
                 {
                     treeView.Nodes.Add(artistNode);
+
+                    foreach (Album album in artist.Albums.Values)
+                    {
+                        TreeNode albumNodeTest = new TreeNode(album.Name);
+                        albumNodeTest.Name = album.Name;
+                        albumNodeTest.ImageKey = album.Name;
+                        Boolean albumExists = artistNode.Nodes.ContainsKey(albumNodeTest.ImageKey);
+
+                        if (albumExists)
+                        {
+                            TreeNode albumNode = treeView.Nodes.Find(album.Name, true)[0];
+                            foreach (Song song in album.Songs.Values)
+                            {
+                                TreeNode songNode = new TreeNode(song.Title);
+                                songNode.Name = song.Title;
+                                songNode.ImageKey = song.Url;
+                                albumNode.Nodes.Add(songNode);
+                                //                                    playlistTree.Nodes.Add(albumNode.ToString(), song.Title);
+                            }
+                        }
+                        else
+                        {
+                            artistNode.Nodes.Add(albumNodeTest);
+                            //                                playlistTree.Nodes.Add(artistNode.ToString(), album.Name);
+                            TreeNode albumNode = treeView.Nodes.Find(album.Name, true)[0];
+                            foreach (Song song in album.Songs.Values)
+                            {
+                                TreeNode songNode = new TreeNode(song.Title);
+                                songNode.Name = song.Title;
+                                songNode.ImageKey = song.Url;
+                                albumNode.Nodes.Add(songNode);
+                                //                                    playlistTree.Nodes.Add(albumNode.ToString(), song.Title);
+                            }
+                        }
+                    }
                 }
             }
         }
