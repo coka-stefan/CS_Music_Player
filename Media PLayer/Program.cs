@@ -17,7 +17,7 @@ namespace Media_Player
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new PlaylistForm());
+            Application.Run(new MainForm());
         }
     }
 }
