@@ -76,5 +76,10 @@ namespace Media_PLayer
         {
             Playlist.PlaySong(e);
         }
+
+        private void tbSearchBar_TextChanged(object sender, EventArgs e)
+        {
+            Playlist.Search(tbSearchBar.Text, lbSongsView);
+        }
     }
 }

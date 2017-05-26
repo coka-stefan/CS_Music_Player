@@ -151,5 +151,17 @@ Should play " + e.Node.Text);
 
             Song songToPlay = (Song) e.Node.Tag;
         }
+
+        public void Search(string search, ListBox lb)
+        {
+            var foundSongs = (from artist in Artists.Values
+                from album in artist.Albums.Values
+                from song in album.Songs.Values
+                where song.Title.ToLower().Contains(search.ToLower())
+                select song).ToList();
+
+
+            lb.DataSource = foundSongs;
+        }
     }
 }
