@@ -38,32 +38,32 @@ namespace Media_Player.Structures
                 CurrentMediaDuration = (int) _player.currentMedia.duration;
         }
 
-        public void PlayMusicFiles(List<MusicFile> songs, bool newPlaylist)
+        public void PlayMusicFiles(List<MusicFile> musicFiles, bool newPlaylist)
         {
             Stop();
             CurrentPlayList = _player.playlistCollection.newPlaylist("newSongs");
-            songs.ForEach(song => CurrentPlayList.appendItem(_player.newMedia(song.PathToFile)));
+            musicFiles.ForEach(mFile => CurrentPlayList.appendItem(_player.newMedia(mFile.Url)));
             _player.currentPlaylist = CurrentPlayList;
             _player.controls.play();
         }
 
-        public void PlayMusicFile(Media song)
+        public void PlayMusicFile(MusicFile media)
         {
-            if (IsPaused && _player.currentMedia != null && song.PathToFile == _player.currentMedia.sourceURL)
+            if (IsPaused && _player.currentMedia != null && media.Url == _player.currentMedia.sourceURL)
             {
                 Resume(CurrentPosition);
             }
             else if (CurrentPlayList != null)
             {
                 var i = 0;
-                while (i < CurrentPlayList.count && CurrentPlayList.Item[i].sourceURL != song.PathToFile)
+                while (i < CurrentPlayList.count && CurrentPlayList.Item[i].sourceURL != media.Url)
                     i++;
                 _player.controls.playItem(_player.currentPlaylist.Item[i]);
             }
             else
             {
                 CurrentPosition = 0;
-                _player.URL = song.PathToFile;
+                _player.URL = media.Url;
                 _player.controls.play();
             }
         }

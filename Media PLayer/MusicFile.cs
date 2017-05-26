@@ -2,20 +2,20 @@
 
 namespace Media_Player
 {
-    public class MusicFile : Media
+    public class MusicFile
     {
         private Song Song { get; set; }
 
         public string AlbumCover { get; set; }
 
-        public string Url => PathToFile;
+        public string Url => Song.Url;
 
         public int Duration => Song.Duration;
 
-        public MusicFile(string pathToFile, uint trackNumber) : base(pathToFile)
+        public MusicFile(string url, uint trackNumber) 
         {
-            TagLib.File file = TagLib.File.Create(pathToFile);
-            Song = new Song(pathToFile, file.Tag.Title, file.Tag.Genres, trackNumber, file.Properties.Duration);
+            TagLib.File file = TagLib.File.Create(url);
+            Song = new Song(url, file.Tag.Title, file.Tag.Genres, trackNumber, file.Properties.Duration);
         }
 
         public override string ToString()

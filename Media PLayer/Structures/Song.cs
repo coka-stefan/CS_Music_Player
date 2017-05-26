@@ -11,9 +11,12 @@ namespace Media_Player.Structures
         public int TimesPlayed { get; set; }
         public string Url { get; set; }
 
-        //  public enum Rating { get; set; }
+        public string Artist { get; set; }
+        public string Album { get; set; }
 
         public int Duration => Length.Minutes * 60 + Length.Seconds;
+
+        public string DurationString => $"{Length.Minutes,00:00}:{Length.Seconds,00:00}";
 
         public Song(string url, string title, string[] genres, uint trackNumber, TimeSpan length)
         {
@@ -23,6 +26,17 @@ namespace Media_Player.Structures
             Number = trackNumber;
             Length = length;
         }
+        public Song(string url, string title, string artist, string album, string[] genres, uint trackNumber, TimeSpan length)
+        {
+            Url = url;
+            Title = title;
+            Genres = genres;
+            Number = trackNumber;
+            Length = length;
+            Artist = artist;
+            Album = album;
+        }
+
 
         public Song(string url, string title, uint number, TimeSpan length)
         {
@@ -35,24 +49,33 @@ namespace Media_Player.Structures
 
         public override string ToString()
         {
-            string formatedName;
-            var duration = Length.Minutes + ":" + Length.Seconds;
-            if(Title.Length>=30)
-            {
-                formatedName = Title.Substring(0, 27) + "...";
-            } else
-            {
-                formatedName = Title;
-            }
-            return $"{Number,2}.{formatedName,-30}{duration,30}"; 
+            var formattedTitle = Title;
+            if (Title.Length >= 25)
+                formattedTitle = Title.Substring(0, 22) + "...";
+            var formattedArtistName = Artist;
+            if (formattedArtistName.Length >= 20)
+                formattedArtistName = formattedArtistName.Substring(0, 17) + "...";
+            var formattedAlbumName = Album;
+            if (formattedAlbumName.Length >= 20)
+                formattedAlbumName = formattedAlbumName.Substring(0, 17) + "...";
+            return $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-34}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
-        public override bool Equals(object obj)
+        public string PlaylistString()
         {
-            Song o = (Song)obj;
-            return o != null && Title == o.Title;
+            {
+                string formatedName;
+                var duration = Length.Minutes + ":" + Length.Seconds;
+                if (Title.Length >= 30)
+                {
+                    formatedName = Title.Substring(0, 27) + "...";
+                }
+                else
+                {
+                    formatedName = Title;
+                }
+                return $"{Number,-2}.{formatedName,-30}\t{duration,-30}";
+            }
         }
-
-        public override int GetHashCode() => base.GetHashCode();
     }
 }

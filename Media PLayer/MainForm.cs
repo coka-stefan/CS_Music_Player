@@ -12,7 +12,7 @@ namespace Media_Player
 {
     public partial class MainForm : Form
     {
-        private Media CurrentMedia { get; set; }
+        private MusicFile CurrentMedia { get; set; }
         private Player Player { get; set; }
         private Dictionary<string, int> UrlToIndex { get; set; }
         private Timer Timer { get; }
@@ -135,14 +135,14 @@ namespace Media_Player
         {
             if (lbOpenedFiles.SelectedIndex != -1)
             {
-                Media selectedItem = lbOpenedFiles.SelectedItem as Media;
+                MusicFile selectedItem = lbOpenedFiles.SelectedItem as MusicFile;
                 Player.PlayMusicFile(selectedItem);
                 CurrentMedia = selectedItem;
             }
             else if (lbOpenedFiles.Items.Count > 0)
             {
-                Player.PlayMusicFile(lbOpenedFiles.Items[0] as Media);
-                CurrentMedia = lbOpenedFiles.Items[0] as Media;
+                Player.PlayMusicFile(lbOpenedFiles.Items[0] as MusicFile);
+                CurrentMedia = lbOpenedFiles.Items[0] as MusicFile;
             }
         }
 
@@ -219,7 +219,7 @@ namespace Media_Player
         private void lbOpenedFiles_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && lbOpenedFiles.Items.Count > 0 && lbOpenedFiles.SelectedIndex != -1)
-                Player.PlayMusicFile(lbOpenedFiles.SelectedItem as Media);
+                Player.PlayMusicFile(lbOpenedFiles.SelectedItem as MusicFile);
         }
 
         private void lblEnd_MouseClick(object sender, MouseEventArgs e)

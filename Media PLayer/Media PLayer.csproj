@@ -52,8 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CurrentMediaChangedEventArgs.cs" />
-    <Compile Include="Media.cs" />
     <Compile Include="MusicFile.cs" />
+    <Compile Include="Playlist.cs" />
+    <Compile Include="PlaylistForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaylistForm.Designer.cs">
+      <DependentUpon>PlaylistForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -74,6 +80,9 @@
     <Compile Include="TimeMode.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlaylistForm.resx">
+      <DependentUpon>PlaylistForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

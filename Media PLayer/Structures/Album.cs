@@ -11,6 +11,13 @@ namespace Media_Player.Structures
         public string CoverUrl { get; set; }
         public int Year { get; set; }
 
+
+        public Album(string name)
+        {
+            Name = name;
+            Songs = new Dictionary<uint, Song>();
+        }
+
         public Album(string coverUrl, int year, string name)
         {
             CoverUrl = coverUrl;
@@ -26,15 +33,7 @@ namespace Media_Player.Structures
 
         public override string ToString()
         {
-            return String.Format("{0,20}({2})", Name, Year);
+            return string.Format("{0,20}({2})", Name, Year);
         }
-
-        public override bool Equals(object obj)
-        {
-            Album o = (Album)obj;
-            return o != null && Name == o.Name;
-        }
-
-        public override int GetHashCode() => base.GetHashCode();
     }
 }
