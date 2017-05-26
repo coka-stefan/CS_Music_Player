@@ -28,6 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Song0");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Song1");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Album0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Artists0", new System.Windows.Forms.TreeNode[] {
+            treeNode3});
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,12 +44,13 @@
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.songsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lbSongsView = new System.Windows.Forms.ListBox();
-            this.btnShowSongs = new System.Windows.Forms.Button();
-            this.btnShowArtists = new System.Windows.Forms.Button();
-            this.tbSearchBar = new System.Windows.Forms.TextBox();
             this.btnShowAlbums = new System.Windows.Forms.Button();
+            this.btnShowArtists = new System.Windows.Forms.Button();
+            this.btnShowSongs = new System.Windows.Forms.Button();
+            this.lbSongsView = new System.Windows.Forms.ListBox();
+            this.tbSearchBar = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tvArtistsView = new System.Windows.Forms.TreeView();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -120,22 +128,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "View";
             // 
-            // lbSongsView
+            // btnShowAlbums
             // 
-            this.lbSongsView.FormattingEnabled = true;
-            this.lbSongsView.Location = new System.Drawing.Point(218, 66);
-            this.lbSongsView.Name = "lbSongsView";
-            this.lbSongsView.Size = new System.Drawing.Size(789, 524);
-            this.lbSongsView.TabIndex = 0;
-            // 
-            // btnShowSongs
-            // 
-            this.btnShowSongs.Location = new System.Drawing.Point(22, 30);
-            this.btnShowSongs.Name = "btnShowSongs";
-            this.btnShowSongs.Size = new System.Drawing.Size(163, 43);
-            this.btnShowSongs.TabIndex = 2;
-            this.btnShowSongs.Text = "Songs";
-            this.btnShowSongs.UseVisualStyleBackColor = true;
+            this.btnShowAlbums.Location = new System.Drawing.Point(22, 155);
+            this.btnShowAlbums.Name = "btnShowAlbums";
+            this.btnShowAlbums.Size = new System.Drawing.Size(163, 43);
+            this.btnShowAlbums.TabIndex = 4;
+            this.btnShowAlbums.Text = "Albums";
+            this.btnShowAlbums.UseVisualStyleBackColor = true;
             // 
             // btnShowArtists
             // 
@@ -145,6 +145,26 @@
             this.btnShowArtists.TabIndex = 3;
             this.btnShowArtists.Text = "Artists";
             this.btnShowArtists.UseVisualStyleBackColor = true;
+            this.btnShowArtists.Click += new System.EventHandler(this.btnShowArtists_Click);
+            // 
+            // btnShowSongs
+            // 
+            this.btnShowSongs.Location = new System.Drawing.Point(22, 30);
+            this.btnShowSongs.Name = "btnShowSongs";
+            this.btnShowSongs.Size = new System.Drawing.Size(163, 43);
+            this.btnShowSongs.TabIndex = 2;
+            this.btnShowSongs.Text = "Songs";
+            this.btnShowSongs.UseVisualStyleBackColor = true;
+            this.btnShowSongs.Click += new System.EventHandler(this.btnShowSongs_Click);
+            // 
+            // lbSongsView
+            // 
+            this.lbSongsView.FormattingEnabled = true;
+            this.lbSongsView.Location = new System.Drawing.Point(218, 66);
+            this.lbSongsView.Name = "lbSongsView";
+            this.lbSongsView.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.lbSongsView.Size = new System.Drawing.Size(789, 524);
+            this.lbSongsView.TabIndex = 0;
             // 
             // tbSearchBar
             // 
@@ -152,15 +172,6 @@
             this.tbSearchBar.Name = "tbSearchBar";
             this.tbSearchBar.Size = new System.Drawing.Size(100, 20);
             this.tbSearchBar.TabIndex = 2;
-            // 
-            // btnShowAlbums
-            // 
-            this.btnShowAlbums.Location = new System.Drawing.Point(22, 155);
-            this.btnShowAlbums.Name = "btnShowAlbums";
-            this.btnShowAlbums.Size = new System.Drawing.Size(163, 43);
-            this.btnShowAlbums.TabIndex = 4;
-            this.btnShowAlbums.Text = "Albums";
-            this.btnShowAlbums.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -171,11 +182,29 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Search";
             // 
+            // tvArtistsView
+            // 
+            this.tvArtistsView.Location = new System.Drawing.Point(218, 66);
+            this.tvArtistsView.Name = "tvArtistsView";
+            treeNode1.Name = "Node3";
+            treeNode1.Text = "Song0";
+            treeNode2.Name = "Node4";
+            treeNode2.Text = "Song1";
+            treeNode3.Name = "Node2";
+            treeNode3.Text = "Album0";
+            treeNode4.Name = "Node0";
+            treeNode4.Text = "Artists0";
+            this.tvArtistsView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode4});
+            this.tvArtistsView.Size = new System.Drawing.Size(789, 524);
+            this.tvArtistsView.TabIndex = 4;
+            // 
             // PlaylistForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1019, 617);
+            this.Controls.Add(this.tvArtistsView);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbSearchBar);
             this.Controls.Add(this.lbSongsView);
@@ -183,7 +212,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PlaylistForm";
-            this.Text = "PlaylistForm";
+            this.Text = "Playlist";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -209,5 +238,6 @@
         private System.Windows.Forms.Button btnShowSongs;
         private System.Windows.Forms.TextBox tbSearchBar;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TreeView tvArtistsView;
     }
 }

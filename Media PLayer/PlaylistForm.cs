@@ -11,14 +11,23 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Media_PLayer
 {
+    internal enum ViewMode
+    {
+        Songs,
+        Artists,
+        Albums
+    }
+
     public partial class PlaylistForm : Form
     {
+        public Playlist Playlist { get; }
+        private ViewMode ViewMode { get; set; }
 
-        public Playlist Playlist { get; set; }
-        
         public PlaylistForm()
         {
             InitializeComponent();
+            ViewMode = ViewMode.Songs;
+            tvArtistsView.Hide();
             Playlist = new Playlist();
         }
 
@@ -33,8 +42,30 @@ namespace Media_PLayer
             if (ofd.ShowDialog() != DialogResult.OK) return;
             foreach (var fileName in ofd.FileNames)
                 Playlist.AddSong(fileName, lbSongsView);
-            //Playlist.ShowSongsOnControl(lbSongsView);
         }
-        
+
+        private void btnShowSongs_Click(object sender, EventArgs e)
+        {
+            if (ViewMode != ViewMode.Songs)
+            {
+                tvArtistsView.Hide();
+                lbSongsView.Show();
+                ViewMode = ViewMode.Songs;
+                Playlist.ShowSongsOnControl(lbSongsView);
+            }
+        }
+
+        private void btnShowArtists_Click(object sender, EventArgs e)
+        {
+            if (ViewMode != ViewMode.Artists)
+            {
+                lbSongsView.Hide();
+                tvArtistsView.Show();
+                ViewMode = ViewMode.Songs;
+                Playlist.ShowArtistsOnTreeView(tvArtistsView);
+            }
+        }
+
+
     }
 }

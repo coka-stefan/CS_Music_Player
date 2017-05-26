@@ -28,7 +28,7 @@ namespace Media_Player.Structures
 
         public void AddSong(Song song)
         {
-            Songs.Add(song.Number, song);
+            Songs.Add((uint) (Songs.Keys.Count + 1), song);
         }
 
         public override string ToString()

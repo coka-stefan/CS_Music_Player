@@ -24,7 +24,7 @@ namespace Media_PLayer
             TagLib.File file = TagLib.File.Create(fileName);
             var artist = file.Tag.FirstPerformer;
             var album = file.Tag.Album;
-            Song song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, (uint) (lb.Items.Count + 1), file.Properties.Duration);
+            Song song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, (uint) (lb.Items.Count + 1) , file.Properties.Duration);
             AddSongToArtist(artist, album, song);
             lb.Items.Add(song);
         }
@@ -44,9 +44,9 @@ namespace Media_PLayer
             }
         }
 
-        public void ShowSongsOnControl(TreeNode treeNode)
+        public void ShowArtistsOnTreeView(TreeView treeView)
         {
-            
+            // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
         }
         
 

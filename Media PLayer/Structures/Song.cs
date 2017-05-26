@@ -58,7 +58,7 @@ namespace Media_Player.Structures
             var formattedAlbumName = Album;
             if (formattedAlbumName.Length >= 20)
                 formattedAlbumName = formattedAlbumName.Substring(0, 17) + "...";
-            return $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-34}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
+            return $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-3}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
         public string PlaylistString()
