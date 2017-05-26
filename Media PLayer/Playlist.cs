@@ -76,13 +76,11 @@ namespace Media_PLayer
                                 songNode.Name = song.Title;
                                 songNode.ImageKey = song.Url;
                                 albumNode.Nodes.Add(songNode);
-                                //                                    playlistTree.Nodes.Add(albumNode.ToString(), song.Title);
                             }
                         }
                         else
                         {
                             artistNodeNew.Nodes.Add(albumNodeTest);
-                            //                                playlistTree.Nodes.Add(artistNode.ToString(), album.Name);
                         }
                     }
                 }
@@ -106,21 +104,18 @@ namespace Media_PLayer
                                 songNode.Name = song.Title;
                                 songNode.ImageKey = song.Url;
                                 albumNode.Nodes.Add(songNode);
-                                //                                    playlistTree.Nodes.Add(albumNode.ToString(), song.Title);
                             }
                         }
                         else
                         {
                             artistNode.Nodes.Add(albumNodeTest);
-                            //                                playlistTree.Nodes.Add(artistNode.ToString(), album.Name);
-                            TreeNode albumNode = treeView.Nodes.Find(album.Name, true)[0];
+                            
                             foreach (Song song in album.Songs.Values)
                             {
                                 TreeNode songNode = new TreeNode(song.Title);
                                 songNode.Name = song.Title;
                                 songNode.ImageKey = song.Url;
-                                albumNode.Nodes.Add(songNode);
-                                //                                    playlistTree.Nodes.Add(albumNode.ToString(), song.Title);
+                                albumNodeTest.Nodes.Add(songNode);
                             }
                         }
                     }
