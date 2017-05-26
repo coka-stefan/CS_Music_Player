@@ -35,7 +35,8 @@ namespace Media_PLayer
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
-                Filter = @"All files (*.flac, *.mp3, *.wav)|*.flac;*.mp3;*.wav|Mp3 files(*.mp3)|*.mp3|Flac files (*.flac)|*.flac|Wav files (*.wav)|*.wav",
+                Filter =
+                    @"All files (*.flac, *.mp3, *.wav)|*.flac;*.mp3;*.wav|Mp3 files(*.mp3)|*.mp3|Flac files (*.flac)|*.flac|Wav files (*.wav)|*.wav",
                 Title = @"Open Music",
                 Multiselect = true
             };
@@ -66,6 +67,14 @@ namespace Media_PLayer
             }
         }
 
+        private void tvArtistsView_DoubleClick(object sender, EventArgs e)
+        {
+            //TODO: do not implement this. 
+        }
 
+        private void tvArtistsView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            Playlist.PlaySong(e);
+        }
     }
 }
