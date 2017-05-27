@@ -50,6 +50,47 @@ namespace Media_PLayer
             }
         }
 
+        public void ShowAlbumsOnTreeView(TreeView treeView)
+        {
+            treeView.Nodes.Clear();
+
+            foreach (var artist in Artists.Values)
+            {
+                foreach (var album in artist.Albums.Values)
+                {
+                    var albumExists = treeView.Nodes.ContainsKey(album.Name);
+
+                    if (albumExists)
+                    {
+                        AddNodeToAlbum(album, treeView);
+                    }
+                    else
+                    {
+                        var albumNode = new TreeNode(album.Name)
+                        {
+                            Name = album.Name,
+                            ImageKey = album.Name,
+                            Tag = album
+                        };
+
+                        treeView.Nodes.Add(albumNode);
+
+                        foreach (var song in album.Songs.Values)
+                        {
+                            var songNode = new TreeNode(song.Title)
+                            {
+                                Name = song.Title,
+                                ImageKey = song.Url,
+                                Tag = song
+                            };
+                            if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                                albumNode.Nodes.Add(songNode);
+                        }
+                    }
+                }
+            }
+        }
+
         public void ShowArtistsOnTreeView(TreeView treeView)
         {
             // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
