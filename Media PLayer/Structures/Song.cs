@@ -37,7 +37,6 @@ namespace Media_Player.Structures
             Album = album;
         }
 
-
         public Song(string url, string title, uint number, TimeSpan length)
         {
             Url = url;
@@ -50,15 +49,15 @@ namespace Media_Player.Structures
         public override string ToString()
         {
             var formattedTitle = Title;
-            if (Title.Length >= 25)
-                formattedTitle = Title.Substring(0, 22) + "...";
+            if (Title.Length > 20)
+                formattedTitle = Title.Substring(0, 20) + "...";
             var formattedArtistName = Artist;
             if (formattedArtistName.Length >= 20)
                 formattedArtistName = formattedArtistName.Substring(0, 17) + "...";
             var formattedAlbumName = Album;
             if (formattedAlbumName.Length >= 20)
                 formattedAlbumName = formattedAlbumName.Substring(0, 17) + "...";
-            return $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-3}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
+            return $"{formattedTitle,-60}\t{DurationString,-8}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
         public string PlaylistString()
