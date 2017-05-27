@@ -7,7 +7,7 @@ namespace Media_Player.Structures
         public string Title { get; set; }
         public uint Number { get; set; }
         public TimeSpan Length { get; set; }
-        public string [] Genres { get; set; }
+        public string[] Genres { get; set; }
         public int TimesPlayed { get; set; }
         public string Url { get; set; }
 
@@ -21,15 +21,23 @@ namespace Media_Player.Structures
         public Song(string url, string title, string[] genres, uint trackNumber, TimeSpan length)
         {
             Url = url;
-            Title = title;
+            if (title is null)
+                Title = "Unknown";
+            else
+                Title = title;
             Genres = genres;
             Number = trackNumber;
             Length = length;
         }
-        public Song(string url, string title, string artist, string album, string[] genres, uint trackNumber, TimeSpan length)
+
+        public Song(string url, string title, string artist, string album, string[] genres, uint trackNumber,
+            TimeSpan length)
         {
             Url = url;
-            Title = title;
+            if (title is null)
+                Title = "Unknown";
+            else
+                Title = title;
             Genres = genres;
             Number = trackNumber;
             Length = length;
@@ -42,7 +50,10 @@ namespace Media_Player.Structures
         {
             Url = url;
             TimesPlayed = 0;
-            Title = title;
+            if (title is null)
+                Title = "Unknown";
+            else
+                Title = title;
             Number = number;
             Length = length;
         }
@@ -58,7 +69,8 @@ namespace Media_Player.Structures
             var formattedAlbumName = Album;
             if (formattedAlbumName.Length >= 20)
                 formattedAlbumName = formattedAlbumName.Substring(0, 17) + "...";
-            return $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-3}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
+            return
+                $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-3}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
         public string PlaylistString()

@@ -251,5 +251,11 @@ namespace Media_Player
                 lblVolume.Text = Player.Volume.ToString();
             }
         }
+
+        private void playlistToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            Form playlist = new PlaylistForm();
+            playlist.Show();
+        }
     }
 }

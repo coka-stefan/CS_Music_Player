@@ -28,11 +28,7 @@ namespace Media_PLayer
                 file.Properties.Duration);
             AddSongToArtist(artist, album, song);
 
-            lb.DataSource = (from a in Artists.Values
-                from al in a.Albums.Values
-                from s in al.Songs.Values
-                where s.Title.ToLower().Contains(search)
-                select s).ToList();
+            Search(search, lb); //updates list box
         }
 
         private void AddSongToArtist(string artist, string album, Song song)
@@ -53,6 +49,8 @@ namespace Media_PLayer
         public void ShowArtistsOnTreeView(TreeView treeView)
         {
             // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
+
+            treeView.Nodes.Clear();
 
             foreach (var artist in Artists.Values)
             {
@@ -114,7 +112,8 @@ namespace Media_PLayer
                     ImageKey = song.Url,
                     Tag = song
                 };
-                albumNode.Nodes.Add(songNode);
+                if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                    albumNode.Nodes.Add(songNode);
             }
         }
 
@@ -129,7 +128,8 @@ namespace Media_PLayer
                     ImageKey = song.Url,
                     Tag = song
                 };
-                albumNode.Nodes.Add(songNode);
+                if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                    albumNode.Nodes.Add(songNode);
             }
         }
 
@@ -163,7 +163,7 @@ Should play " + e.Node.Text);
 
             var play = new MusicFile(songToPlay);
             var mf = (MainForm) parent;
-            mf.lbOpenedFiles.Items.Add(play);
+            //mf.lbOpenedFiles.Items.Add(play);
         }
 
         public void Search(string search, ListBox lb)
