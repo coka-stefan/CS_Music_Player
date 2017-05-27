@@ -38,9 +38,15 @@ namespace Media_PLayer
 
         public void ShowSongsOnControl(ListBox listBox)
         {
+            listBox.DataSource = null;
+
             foreach (var artist in Artists.Values)
             {
-                artist.Songs.ForEach(song => listBox.Items.Add(song));
+                artist.Songs.ForEach(song =>
+                {
+                    if(!listBox.Items.Contains(song))
+                        listBox.Items.Add(song);
+                });
             }
         }
 
@@ -159,12 +165,14 @@ namespace Media_PLayer
          //   var songToPlay = (Song) e.Node.Tag;
         }
 
-        public void Search(string search, ListBox lb)
+        public void Search(string pattern, ListBox lb)
         {
             lb.DataSource = (from artist in Artists.Values
                 from album in artist.Albums.Values
                 from song in album.Songs.Values
-                where song.Title.ToLower().Contains(search.ToLower())
+                where song.Title.ToLower().Contains(pattern.ToLower()) 
+                    || song.Artist.ToLower().Contains(pattern.ToLower()) 
+                    || song.Album.ToLower().Contains(pattern.ToLower())
                 select song).ToList();
 
             //lb.Items.Add("Item");

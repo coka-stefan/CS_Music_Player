@@ -73,21 +73,5 @@ namespace Media_Player.Structures
                 $"{Number + ".",-4}{formattedTitle,-60}\t{DurationString,-3}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
-        public string PlaylistString()
-        {
-            {
-                string formatedName;
-                var duration = Length.Minutes + ":" + Length.Seconds;
-                if (Title.Length >= 30)
-                {
-                    formatedName = Title.Substring(0, 27) + "...";
-                }
-                else
-                {
-                    formatedName = Title;
-                }
-                return $"{Number,-2}.{formatedName,-30}\t{duration,-30}";
-            }
-        }
     }
 }
