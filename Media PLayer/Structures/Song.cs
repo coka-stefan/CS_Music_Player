@@ -54,12 +54,12 @@ namespace Media_Player.Structures
             if (Title.Length > 20)
                 formattedTitle = Title.Substring(0, 20) + "...";
             var formattedArtistName = Artist;
-            if (formattedArtistName.Length >= 20)
-                formattedArtistName = formattedArtistName.Substring(0, 17) + "...";
+            if (formattedArtistName.Length > 20)
+                formattedArtistName = formattedArtistName.Substring(0, 20) + "...";
             var formattedAlbumName = Album;
-            if (formattedAlbumName.Length >= 20)
-                formattedAlbumName = formattedAlbumName.Substring(0, 17) + "...";
-            return $"{formattedTitle,-60}\t{DurationString,-8}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
+            if (formattedAlbumName.Length > 20)
+                formattedAlbumName = formattedAlbumName.Substring(0, 20) + "...";
+            return $"{formattedTitle,-60}\t{DurationString,-8}\t{formattedArtistName,-40}\t{formattedAlbumName,-40}";
         }
 
     }
