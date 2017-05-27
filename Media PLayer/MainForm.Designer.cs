@@ -325,7 +325,7 @@
         private System.Windows.Forms.ToolStripMenuItem playlistToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playlistToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem playlistToolStripMenuItem2;
-        private System.Windows.Forms.ListBox lbOpenedFiles;
+        public System.Windows.Forms.ListBox lbOpenedFiles;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnPrevious;

@@ -42,7 +42,19 @@ namespace Media_PLayer
             };
             if (ofd.ShowDialog() != DialogResult.OK) return;
             foreach (var fileName in ofd.FileNames)
-                Playlist.AddSong(fileName, lbSongsView, tbSearchBar.Text);
+                Playlist.AddSong(fileName);
+            Playlist.ShowArtistsOnTreeView(tvArtistsView);
+            Playlist.ShowSongsOnControl(lbSongsView);
+            if (ViewMode == ViewMode.Songs)
+            {
+                tvArtistsView.Hide();
+                lbSongsView.Show();
+            }
+            else
+            {
+                lbSongsView.Hide();
+                tvArtistsView.Show();
+            }
         }
 
         private void btnShowSongs_Click(object sender, EventArgs e)
@@ -52,7 +64,6 @@ namespace Media_PLayer
                 tvArtistsView.Hide();
                 lbSongsView.Show();
                 ViewMode = ViewMode.Songs;
-                Playlist.ShowSongsOnControl(lbSongsView);
             }
         }
 
@@ -62,8 +73,7 @@ namespace Media_PLayer
             {
                 lbSongsView.Hide();
                 tvArtistsView.Show();
-                ViewMode = ViewMode.Songs;
-                Playlist.ShowArtistsOnTreeView(tvArtistsView);
+                ViewMode = ViewMode.Artists;
             }
         }
 

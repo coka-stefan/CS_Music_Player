@@ -19,16 +19,14 @@ namespace Media_PLayer
             Artists = new Dictionary<string, Artist>();
         }
 
-        public void AddSong(string fileName, ListBox lb, string search)
+        public void AddSong(string fileName)
         {
             var file = TagLib.File.Create(fileName);
             var artist = file.Tag.FirstPerformer;
             var album = file.Tag.Album;
-            var song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, (uint) (lb.Items.Count + 1),
+            var song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, file.Tag.Track,
                 file.Properties.Duration);
             AddSongToArtist(artist, album, song);
-
-            Search(search, lb); //updates list box
         }
 
         private void AddSongToArtist(string artist, string album, Song song)
@@ -156,14 +154,9 @@ namespace Media_PLayer
         {
             //TODO: Play song from e
 
-            MessageBox.Show(@"NOT IMPLEMENTED YET
-Should play " + e.Node.Text);
+           // MessageBox.Show(@"NOT IMPLEMENTED YET Should play " + e.Node.Text);
 
-            var songToPlay = (Song) e.Node.Tag;
-
-            var play = new MusicFile(songToPlay);
-            var mf = (MainForm) parent;
-            //mf.lbOpenedFiles.Items.Add(play);
+         //   var songToPlay = (Song) e.Node.Tag;
         }
 
         public void Search(string search, ListBox lb)
@@ -173,6 +166,8 @@ Should play " + e.Node.Text);
                 from song in album.Songs.Values
                 where song.Title.ToLower().Contains(search.ToLower())
                 select song).ToList();
+
+            //lb.Items.Add("Item");
         }
     }
 }
