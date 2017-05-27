@@ -7,7 +7,7 @@ namespace Media_Player.Structures
         public string Title { get; set; }
         public uint Number { get; set; }
         public TimeSpan Length { get; set; }
-        public string [] Genres { get; set; }
+        public string[] Genres { get; set; }
         public int TimesPlayed { get; set; }
         public string Url { get; set; }
 
@@ -26,7 +26,9 @@ namespace Media_Player.Structures
             Number = trackNumber;
             Length = length;
         }
-        public Song(string url, string title, string artist, string album, string[] genres, uint trackNumber, TimeSpan length)
+
+        public Song(string url, string title, string artist, string album, string[] genres, uint trackNumber,
+            TimeSpan length)
         {
             Url = url;
             Title = title;
@@ -60,21 +62,5 @@ namespace Media_Player.Structures
             return $"{formattedTitle,-60}\t{DurationString,-8}\t{formattedArtistName,-25}\t{formattedAlbumName,-25}";
         }
 
-        public string PlaylistString()
-        {
-            {
-                string formatedName;
-                var duration = Length.Minutes + ":" + Length.Seconds;
-                if (Title.Length >= 30)
-                {
-                    formatedName = Title.Substring(0, 27) + "...";
-                }
-                else
-                {
-                    formatedName = Title;
-                }
-                return $"{Number,-2}.{formatedName,-30}\t{duration,-30}";
-            }
-        }
     }
 }
