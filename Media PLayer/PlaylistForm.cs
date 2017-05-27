@@ -28,6 +28,7 @@ namespace Media_PLayer
             InitializeComponent();
             ViewMode = ViewMode.Songs;
             tvArtistsView.Hide();
+            tvAlbumsView.Hide();
             Playlist = new Playlist();
         }
 
@@ -45,15 +46,24 @@ namespace Media_PLayer
                 Playlist.AddSong(fileName);
             Playlist.ShowArtistsOnTreeView(tvArtistsView);
             Playlist.ShowSongsOnControl(lbSongsView);
-            if (ViewMode == ViewMode.Songs)
+            Playlist.ShowAlbumsOnTreeView(tvAlbumsView);
+            switch (ViewMode)
             {
-                tvArtistsView.Hide();
-                lbSongsView.Show();
-            }
-            else
-            {
-                lbSongsView.Hide();
-                tvArtistsView.Show();
+                case ViewMode.Songs:
+                    tvArtistsView.Hide();
+                    tvAlbumsView.Hide();
+                    lbSongsView.Show();
+                    break;
+                case ViewMode.Artists:
+                    lbSongsView.Hide();
+                    tvAlbumsView.Hide();
+                    tvArtistsView.Show();
+                    break;
+                default:
+                    lbSongsView.Hide();
+                    tvArtistsView.Hide();
+                    tvAlbumsView.Show();
+                    break;
             }
         }
 
@@ -62,6 +72,7 @@ namespace Media_PLayer
             if (ViewMode != ViewMode.Songs)
             {
                 tvArtistsView.Hide();
+                tvAlbumsView.Hide();
                 lbSongsView.Show();
                 ViewMode = ViewMode.Songs;
             }
@@ -72,8 +83,20 @@ namespace Media_PLayer
             if (ViewMode != ViewMode.Artists)
             {
                 lbSongsView.Hide();
+                tvAlbumsView.Hide();
                 tvArtistsView.Show();
                 ViewMode = ViewMode.Artists;
+            }
+        }
+
+        private void btnShowAlbums_Click(object sender, EventArgs e)
+        {
+            if (ViewMode != ViewMode.Albums)
+            {
+                lbSongsView.Hide();
+                tvArtistsView.Hide();
+                tvAlbumsView.Show();
+                ViewMode = ViewMode.Albums;
             }
         }
 
@@ -91,5 +114,7 @@ namespace Media_PLayer
         {
             Playlist.Search(tbSearchBar.Text, lbSongsView);
         }
+
+       
     }
 }

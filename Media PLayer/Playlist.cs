@@ -50,9 +50,52 @@ namespace Media_PLayer
             }
         }
 
+        public void ShowAlbumsOnTreeView(TreeView treeView)
+        {
+            treeView.Nodes.Clear();
+
+            foreach (var artist in Artists.Values)
+            {
+                foreach (var album in artist.Albums.Values)
+                {
+                    var albumExists = treeView.Nodes.ContainsKey(album.Name);
+
+                    if (albumExists)
+                    {
+                        AddNodeToAlbum(album, treeView);
+                    }
+                    else
+                    {
+                        var albumNode = new TreeNode(album.Name)
+                        {
+                            Name = album.Name,
+                            ImageKey = album.Name,
+                            Tag = album
+                        };
+
+                        treeView.Nodes.Add(albumNode);
+
+                        foreach (var song in album.Songs.Values)
+                        {
+                            var songNode = new TreeNode(song.Title)
+                            {
+                                Name = song.Title,
+                                ImageKey = song.Url,
+                                Tag = song
+                            };
+                            if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                                albumNode.Nodes.Add(songNode);
+                        }
+                    }
+                }
+            }
+        }
+
         public void ShowArtistsOnTreeView(TreeView treeView)
         {
             // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
+
+            treeView.Nodes.Clear();
 
             foreach (var artist in Artists.Values)
             {
@@ -114,7 +157,8 @@ namespace Media_PLayer
                     ImageKey = song.Url,
                     Tag = song
                 };
-                albumNode.Nodes.Add(songNode);
+                if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                    albumNode.Nodes.Add(songNode);
             }
         }
 
@@ -129,7 +173,8 @@ namespace Media_PLayer
                     ImageKey = song.Url,
                     Tag = song
                 };
-                albumNode.Nodes.Add(songNode);
+                if (!albumNode.Nodes.ContainsKey(songNode.ImageKey))
+                    albumNode.Nodes.Add(songNode);
             }
         }
 
@@ -159,11 +204,6 @@ namespace Media_PLayer
            // MessageBox.Show(@"NOT IMPLEMENTED YET Should play " + e.Node.Text);
 
          //   var songToPlay = (Song) e.Node.Tag;
-
-           // var play = new MusicFile(songToPlay);
-            //var mf = (MainForm) parent;
-            //mf.lbOpenedFiles.Items.Add(play);
-            
         }
 
         public void Search(string pattern, ListBox lb)
@@ -175,6 +215,8 @@ namespace Media_PLayer
                     || song.Artist.ToLower().Contains(pattern.ToLower()) 
                     || song.Album.ToLower().Contains(pattern.ToLower())
                 select song).ToList();
+
+            //lb.Items.Add("Item");
         }
     }
 }

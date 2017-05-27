@@ -14,7 +14,10 @@ namespace Media_Player.Structures
 
         public Album(string name)
         {
-            Name = name;
+            if (name is null)
+                Name = "Unknown";
+            else
+                Name = name;
             Songs = new Dictionary<uint, Song>();
         }
 
@@ -22,7 +25,10 @@ namespace Media_Player.Structures
         {
             CoverUrl = coverUrl;
             Year = year;
-            Name = name;
+            if (name is null)
+                Name = "Unknown";
+            else
+                Name = name;
             Songs = new Dictionary<uint, Song>();
         }
 
