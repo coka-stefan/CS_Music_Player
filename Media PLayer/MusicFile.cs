@@ -18,6 +18,11 @@ namespace Media_Player
             Song = new Song(url, file.Tag.Title, file.Tag.FirstPerformer, file.Tag.Album, file.Tag.Genres, trackNumber, file.Properties.Duration);
         }
 
+        public MusicFile(Song song)
+        {
+            Song = song;
+        }
+
         public override string ToString()
         {
             return $"{Song.Number + ".",-4}{Song.Title,-50}\t{Song.DurationString, 5}";

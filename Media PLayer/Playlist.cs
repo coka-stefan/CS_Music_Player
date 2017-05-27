@@ -19,15 +19,20 @@ namespace Media_PLayer
             Artists = new Dictionary<string, Artist>();
         }
 
-        public void AddSong(string fileName, ListBox lb)
+        public void AddSong(string fileName, ListBox lb, string search)
         {
-            TagLib.File file = TagLib.File.Create(fileName);
+            var file = TagLib.File.Create(fileName);
             var artist = file.Tag.FirstPerformer;
             var album = file.Tag.Album;
-            Song song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, (uint) (lb.Items.Count + 1),
+            var song = new Song(fileName, file.Tag.Title, artist, album, file.Tag.Genres, (uint) (lb.Items.Count + 1),
                 file.Properties.Duration);
             AddSongToArtist(artist, album, song);
-            lb.Items.Add(song);
+
+            lb.DataSource = (from a in Artists.Values
+                from al in a.Albums.Values
+                from s in al.Songs.Values
+                where s.Title.ToLower().Contains(search)
+                select s).ToList();
         }
 
         private void AddSongToArtist(string artist, string album, Song song)
@@ -39,7 +44,7 @@ namespace Media_PLayer
 
         public void ShowSongsOnControl(ListBox listBox)
         {
-            foreach (Artist artist in Artists.Values)
+            foreach (var artist in Artists.Values)
             {
                 artist.Songs.ForEach(song => listBox.Items.Add(song));
             }
@@ -49,119 +54,125 @@ namespace Media_PLayer
         {
             // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
 
-            foreach (Artist artist in Artists.Values)
+            foreach (var artist in Artists.Values)
             {
-                TreeNode artistNode = new TreeNode(artist.Name)
+                var artistNode = new TreeNode(artist.Name)
                 {
                     Name = artist.Name,
                     ImageKey = artist.Name,
                     Tag = artist // Use this for retrieval of artist
                 };
-                Boolean artistExists = treeView.Nodes.ContainsKey(artistNode.ImageKey);
+                var artistExists = treeView.Nodes.ContainsKey(artist.Name);
 
                 if (artistExists)
                 {
-                    TreeNode artistNodeNew = treeView.Nodes.Find(artist.Name, true)[0];
-
-                    foreach (Album album in artist.Albums.Values)
-                    {
-                        TreeNode albumNodeTest = new TreeNode(album.Name)
-                        {
-                            Name = album.Name,
-                            ImageKey = album.Name,
-                            Tag = album // Use this for retrieval of album
-                        };
-
-                        Boolean albumExists = artistNodeNew.Nodes.ContainsKey(albumNodeTest.ImageKey);
-
-                        if (albumExists)
-                        {
-                            TreeNode albumNode = treeView.Nodes.Find(album.Name, true)[0];
-                            foreach (Song song in album.Songs.Values)
-                            {
-                                TreeNode songNode = new TreeNode(song.Title)
-                                {
-                                    Name = song.Title,
-                                    ImageKey = song.Url,
-                                    Tag = song // Use this for retrieval of song
-                                };
-                                albumNode.Nodes.Add(songNode);
-                            }
-                        }
-                        else
-                        {
-                            artistNodeNew.Nodes.Add(albumNodeTest);
-                        }
-                    }
+                    AddNodeToArtist(artist, treeView);
                 }
                 else
                 {
-                    treeView.Nodes.Add(artistNode);
-
-                    foreach (Album album in artist.Albums.Values)
-                    {
-                        TreeNode albumNodeTest = new TreeNode(album.Name)
-                        {
-                            Name = album.Name,
-                            ImageKey = album.Name,
-                            Tag = album
-                        };
-                        Boolean albumExists = artistNode.Nodes.ContainsKey(albumNodeTest.ImageKey);
-
-                        if (albumExists)
-                        {
-                            TreeNode albumNode = treeView.Nodes.Find(album.Name, true)[0];
-                            foreach (Song song in album.Songs.Values)
-                            {
-                                TreeNode songNode = new TreeNode(song.Title)
-                                {
-                                    Name = song.Title,
-                                    ImageKey = song.Url,
-                                    Tag = song
-                                };
-                                albumNode.Nodes.Add(songNode);
-                            }
-                        }
-                        else
-                        {
-                            artistNode.Nodes.Add(albumNodeTest);
-
-                            foreach (Song song in album.Songs.Values)
-                            {
-                                TreeNode songNode = new TreeNode(song.Title)
-                                {
-                                    Name = song.Title,
-                                    ImageKey = song.Url,
-                                    Tag = song
-                                };
-                                albumNodeTest.Nodes.Add(songNode);
-                            }
-                        }
-                    }
+                    AddNewArtistNode(artistNode, treeView);
                 }
             }
         }
 
-        public void PlaySong(TreeNodeMouseClickEventArgs e)
+        private static void AddNewArtistNode(TreeNode artistNode, TreeView treeView)
+        {
+            treeView.Nodes.Add(artistNode);
+            var artist = (Artist) artistNode.Tag;
+
+            foreach (var album in artist.Albums.Values)
+            {
+                var albumExists = artistNode.Nodes.ContainsKey(album.Name);
+
+                if (albumExists)
+                {
+                    AddNodeToAlbum(album, treeView);
+                }
+                else
+                {
+                    AddNewAlbumNode(artistNode, album);
+                }
+            }
+        }
+
+        private static void AddNewAlbumNode(TreeNode artistNode, Album album)
+        {
+            var albumNode = new TreeNode(album.Name)
+            {
+                Name = album.Name,
+                ImageKey = album.Name,
+                Tag = album
+            };
+
+            artistNode.Nodes.Add(albumNode);
+
+            foreach (var song in album.Songs.Values)
+            {
+                var songNode = new TreeNode(song.Title)
+                {
+                    Name = song.Title,
+                    ImageKey = song.Url,
+                    Tag = song
+                };
+                albumNode.Nodes.Add(songNode);
+            }
+        }
+
+        private static void AddNodeToAlbum(Album album, TreeView treeView)
+        {
+            var albumNode = treeView.Nodes.Find(album.Name, true)[0];
+            foreach (var song in album.Songs.Values)
+            {
+                var songNode = new TreeNode(song.Title)
+                {
+                    Name = song.Title,
+                    ImageKey = song.Url,
+                    Tag = song
+                };
+                albumNode.Nodes.Add(songNode);
+            }
+        }
+
+        private static void AddNodeToArtist(Artist artist, TreeView treeView)
+        {
+            var artistNodeNew = treeView.Nodes.Find(artist.Name, true)[0];
+
+            foreach (var album in artist.Albums.Values)
+            {
+                var albumExists = artistNodeNew.Nodes.ContainsKey(album.Name);
+
+                if (albumExists)
+                {
+                    AddNodeToAlbum(album, treeView);
+                }
+                else
+                {
+                    AddNewAlbumNode(artistNodeNew, album);
+                }
+            }
+        }
+
+        public static void PlaySong(TreeNodeMouseClickEventArgs e, Control parent)
         {
             //TODO: Play song from e
 
             MessageBox.Show(@"NOT IMPLEMENTED YET
 Should play " + e.Node.Text);
 
-            Song songToPlay = (Song) e.Node.Tag;
+            var songToPlay = (Song) e.Node.Tag;
+
+            var play = new MusicFile(songToPlay);
+            var mf = (MainForm) parent;
+            mf.lbOpenedFiles.Items.Add(play);
         }
 
         public void Search(string search, ListBox lb)
         {
-            var foundSongs = (from artist in Artists.Values
+            lb.DataSource = (from artist in Artists.Values
                 from album in artist.Albums.Values
                 from song in album.Songs.Values
                 where song.Title.ToLower().Contains(search.ToLower())
                 select song).ToList();
-
-
-            lb.DataSource = foundSongs;
         }
     }
 }

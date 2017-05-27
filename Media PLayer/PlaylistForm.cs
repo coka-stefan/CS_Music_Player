@@ -42,7 +42,7 @@ namespace Media_PLayer
             };
             if (ofd.ShowDialog() != DialogResult.OK) return;
             foreach (var fileName in ofd.FileNames)
-                Playlist.AddSong(fileName, lbSongsView);
+                Playlist.AddSong(fileName, lbSongsView, tbSearchBar.Text);
         }
 
         private void btnShowSongs_Click(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace Media_PLayer
 
         private void tvArtistsView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Playlist.PlaySong(e);
+            Playlist.PlaySong(e, Parent);
         }
 
         private void tbSearchBar_TextChanged(object sender, EventArgs e)
