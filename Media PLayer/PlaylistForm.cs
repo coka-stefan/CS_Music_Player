@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using Media_Player;
+using Media_Player.Structures;
 
 namespace Media_PLayer
 {
@@ -18,15 +22,29 @@ namespace Media_PLayer
         private string _fileName;
         public Playlist Playlist { get; set; }
         private ViewMode ViewMode { get; set; }
+        private EventHandler<PlaylistPlayClickedEventArgs> PlayClickedEventHandler { get; set; }
 
-        public PlaylistForm()
+        public PlaylistForm(EventHandler<PlaylistPlayClickedEventArgs> eventHandler)
         {
             InitializeComponent();
             ViewMode = ViewMode.Songs;
             tvArtistsView.Hide();
             tvAlbumsView.Hide();
+            PlayClickedEventHandler = eventHandler;
             Playlist = new Playlist();
         }
+
+        public PlaylistForm(EventHandler<PlaylistPlayClickedEventArgs> eventHandler, Playlist playlist)
+        {
+            InitializeComponent();
+            ViewMode = ViewMode.Songs;
+            tvArtistsView.Hide();
+            tvAlbumsView.Hide();
+            PlayClickedEventHandler = eventHandler;
+            Playlist = playlist;
+            FillComponents();
+        }
+
 
         private void songsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -104,7 +122,21 @@ namespace Media_PLayer
 
         private void tvArtistsView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            //TODO: transport the selected item(s) into the main form to be played
+            var selectedSongs = new List<Song>(); //lbSongsView.SelectedItems.Cast<Song>().ToList();
+            if (e.Node.Level == 2)
+                selectedSongs = new List<Song> {(Song) e.Node.Tag};
+            if (e.Node.Level == 1)
+            {
+                var album = (Album) e.Node.Tag;
+                selectedSongs.AddRange(album.Songs.Values);
+            }
+            if (e.Node.Level == 0)
+            {
+                var artist = (Artist) e.Node.Tag;
+                selectedSongs.AddRange(artist.Albums.Values.SelectMany(album => album.Songs.Values));
+            }
+
+            PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(selectedSongs));
         }
 
         private void tbSearchBar_TextChanged(object sender, EventArgs e)
@@ -155,7 +187,8 @@ namespace Media_PLayer
                     }
                     break;
                 case Keys.Enter:
-                    //TODO: Play selected songs
+                    var selectedSongs = lbSongsView.SelectedItems.Cast<Song>().ToList();
+                    PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(selectedSongs));
                     break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
@@ -165,7 +198,7 @@ namespace Media_PLayer
         {
             if (control.GetType() == typeof(ListBox))
             {
-                var lb = (ListBox)control;
+                var lb = (ListBox) control;
                 for (var i = 0; i < lb.Items.Count; i++)
                     lb.SetSelected(i, false);
             }
@@ -178,7 +211,6 @@ namespace Media_PLayer
                 DeselectAllSongs(lbSongsView);
             }
         }
-
 
         private void RemoveSelectedItems()
         {
@@ -196,7 +228,6 @@ namespace Media_PLayer
                 default:
                     return;
             }
-            //TODO: Remove selected items (if any) from the playlist Dictionary and all the controls 
         }
 
         private void SaveFile()
@@ -299,7 +330,8 @@ namespace Media_PLayer
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Do you want to save current playlist first?", "Save?", MessageBoxButtons.YesNo);
+            var result = MessageBox.Show("Do you want to save current playlist first?", "Save?",
+                MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
                 SaveFile();
@@ -312,6 +344,27 @@ namespace Media_PLayer
                 tvAlbumsView.Nodes.Clear();
                 _fileName = null;
             }
+        }
+
+        private void allSongsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lbSongsView.Items.Count > 0)
+                PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(Playlist.AllSongs));
+        }
+
+        private void selectedSongsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lbSongsView.SelectedItems.Count <= 0) return;
+            var selectedSongs = lbSongsView.SelectedItems.Cast<Song>().ToList();
+            PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(selectedSongs));
+        }
+
+        private void removeAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Playlist.RemoveSongs();
+            lbSongsView.Items.Clear();
+            tvAlbumsView.Nodes.Clear();
+            tvArtistsView.Nodes.Clear();
         }
     }
 }

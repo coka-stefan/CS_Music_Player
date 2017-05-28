@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Media_Player.Structures;
 using Media_PLayer;
 
@@ -17,6 +19,7 @@ namespace Media_Player
         private Dictionary<string, int> UrlToIndex { get; set; }
         private Timer Timer { get; }
         private event EventHandler<CurrentMediaChangedEventArgs> MediaChanged;
+        private event EventHandler<PlaylistPlayClickedEventArgs> PlayListPlayClicked;
         private TimeMode TimeMode { get; set; }
 
         public MainForm()
@@ -25,12 +28,13 @@ namespace Media_Player
             UrlToIndex = new Dictionary<string, int>();
             lblVolume.Text = tbVolume.Value.ToString();
             MediaChanged += MainForm_MediaChanged;
+            PlayListPlayClicked += MainForm_PlayListPlayClicked;
             Player = new Player(MediaChanged) {Volume = tbVolume.Value};
             Timer = new Timer() {Interval = 1000};
             Timer.Tick += Timer_Tick;
             TimeMode = TimeMode.Remaining;
         }
-            
+
         private void OpenMusicFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog
@@ -176,11 +180,6 @@ namespace Media_Player
                 Player.Next();
         }
 
-        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
-        {
-            MediaChanged?.Invoke(this, e);
-        }
-
         private void MainForm_MediaChanged(object sender, CurrentMediaChangedEventArgs e)
         {
             if (TimeMode == TimeMode.Remaining)
@@ -254,8 +253,61 @@ namespace Media_Player
 
         private void playlistToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            PlaylistForm pf = new PlaylistForm();
+            PlaylistForm pf = new PlaylistForm(PlayListPlayClicked);
             pf.Show();
+        }
+
+
+        private void MainForm_PlayListPlayClicked(object sender, PlaylistPlayClickedEventArgs e)
+        {
+            Focus();
+            ClearGui();
+            UrlToIndex.Clear();
+            List<MusicFile> musicFiles = new List<MusicFile>();
+            e.SongsToBePlayed.ForEach(song =>
+            {
+                MusicFile mf = new MusicFile(song);
+                musicFiles.Add(mf);
+                lbOpenedFiles.Items.Add(mf);
+                UrlToIndex.Add(mf.Url, lbOpenedFiles.Items.Count - 1);
+            });
+            Player.PlayMusicFiles(musicFiles, true);
+
+        }
+
+
+        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
+        {
+            MediaChanged?.Invoke(this, e);
+        }
+
+        protected virtual void OnPlayListPlayClicked(PlaylistPlayClickedEventArgs e)
+        {
+            PlayListPlayClicked?.Invoke(this, e);
+        }
+
+        private void playlistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                Filter = @"Playlist file (*.plst)|*.plst",
+                Title = @"Save playlist"
+            };
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+            try
+            {
+                using (var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open))
+                {
+                    IFormatter formater = new BinaryFormatter();
+                    Playlist playlist = (Playlist)formater.Deserialize(fileStream);
+                    PlaylistForm pf = new PlaylistForm(PlayListPlayClicked, playlist);
+                    pf.Show();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(@"Could not read file: " + openFileDialog.FileName);
+            }
         }
     }
 }

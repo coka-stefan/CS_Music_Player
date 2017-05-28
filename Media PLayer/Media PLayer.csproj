@@ -60,6 +60,7 @@
     <Compile Include="PlaylistForm.Designer.cs">
       <DependentUpon>PlaylistForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlaylistPlayClickedEventArgs.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
