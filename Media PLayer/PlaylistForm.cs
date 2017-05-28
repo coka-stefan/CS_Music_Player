@@ -40,9 +40,7 @@ namespace Media_PLayer
             if (ofd.ShowDialog() != DialogResult.OK) return;
             foreach (var fileName in ofd.FileNames)
                 Playlist.AddSong(fileName);
-            Playlist.ShowArtistsOnTreeView(tvArtistsView);
-            Playlist.ShowSongsOnControl(lbSongsView);
-            Playlist.ShowAlbumsOnTreeView(tvAlbumsView);
+            FillComponents();
             switch (ViewMode)
             {
                 case ViewMode.Songs:
@@ -61,6 +59,13 @@ namespace Media_PLayer
                     tvAlbumsView.Show();
                     break;
             }
+        }
+
+        private void FillComponents()
+        {
+            Playlist.ShowArtistsOnTreeView(tvArtistsView);
+            Playlist.ShowSongsOnControl(lbSongsView);
+            Playlist.ShowAlbumsOnTreeView(tvAlbumsView);
         }
 
         private void btnShowSongs_Click(object sender, EventArgs e)
@@ -185,6 +190,7 @@ namespace Media_PLayer
                 {
                     IFormatter formater = new BinaryFormatter();
                     Playlist = (Playlist) formater.Deserialize(fileStream);
+                    FillComponents();
                 }
             }
             catch (Exception)
