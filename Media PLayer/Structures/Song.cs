@@ -7,9 +7,9 @@ namespace Media_Player.Structures
     {
         public string Title { get; set; }
         public uint Number { get; set; }
-        public TimeSpan Length { get; set; }
-        public string[] Genres { get; set; }
-        public int TimesPlayed { get; set; }
+        private TimeSpan Length { get; set; }
+        private string[] Genres { get; set; }
+        private int TimesPlayed { get; set; }
         public string Url { get; set; }
 
         public string Artist { get; set; }

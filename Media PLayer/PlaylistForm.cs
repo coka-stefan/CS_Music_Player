@@ -58,6 +58,8 @@ namespace Media_PLayer
                     tvArtistsView.Hide();
                     tvAlbumsView.Show();
                     break;
+                default:
+                    return;
             }
         }
 
@@ -293,6 +295,23 @@ namespace Media_PLayer
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFile();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Do you want to save current playlist first?", "Save?", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                SaveFile();
+            }
+            else
+            {
+                Playlist.Clear();
+                tvArtistsView.Nodes.Clear();
+                lbSongsView.Items.Clear();
+                tvAlbumsView.Nodes.Clear();
+                _fileName = null;
+            }
         }
     }
 }

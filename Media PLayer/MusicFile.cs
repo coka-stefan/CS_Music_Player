@@ -14,7 +14,7 @@ namespace Media_Player
 
         public MusicFile(string url, uint trackNumber) 
         {
-            TagLib.File file = TagLib.File.Create(url);
+            var file = TagLib.File.Create(url);
             Song = new Song(url, file.Tag.Title, file.Tag.FirstPerformer, file.Tag.Album, file.Tag.Genres, trackNumber, file.Properties.Duration);
         }
 

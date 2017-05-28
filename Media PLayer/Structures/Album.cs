@@ -9,8 +9,8 @@ namespace Media_Player.Structures
         public string Name { get; set; }
         public Dictionary<uint, Song> Songs { get; }
 
-        public string CoverUrl { get; set; }
-        public int Year { get; set; }
+        private string CoverUrl { get; set; }
+        private int Year { get; set; }
 
 
         public Album(string name)

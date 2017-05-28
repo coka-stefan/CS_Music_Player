@@ -11,10 +11,8 @@ namespace Media_Player.Structures
         private bool IsPaused => _player.playState == WMPPlayState.wmppsPaused;
         private double CurrentPosition { get; set; }
         public string CurrentMediaDurationString => _player.currentMedia.durationString;
-
         public string CurrentPositionString => _player.controls.currentPositionString;
-
-        public int CurrentMediaDuration { get; private set; }
+        private int CurrentMediaDuration { get; set; }
         public event EventHandler<CurrentMediaChangedEventArgs> MediaChanged; 
 
         public Player(EventHandler<CurrentMediaChangedEventArgs> mediaChangedEventHandler)

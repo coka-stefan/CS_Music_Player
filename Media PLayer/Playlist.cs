@@ -13,7 +13,7 @@ namespace Media_PLayer
     [Serializable]
     public class Playlist
     {
-        private Dictionary<string, Artist> Artists { get; }
+        private Dictionary<string, Artist> Artists { get; set; }
 
         public Playlist()
         {
@@ -94,8 +94,6 @@ namespace Media_PLayer
 
         public void ShowArtistsOnTreeView(TreeView treeView)
         {
-            // show artists as root nodes, albums as child nodes to artists nodes, songs as leafs to every album node
-
             treeView.Nodes.Clear();
 
             foreach (var artist in Artists.Values)
@@ -289,8 +287,6 @@ namespace Media_PLayer
                     break;
                 case 2:
                     {
-                        //var album = (Album)remove.Parent.Tag;
-                        //var artist = (Artist)remove.Parent.Parent.Tag;
                         var song = (Song)remove.Tag;
                         for (var i = 0; i < lbSongsView.Items.Count; i++)
                         {
@@ -301,7 +297,6 @@ namespace Media_PLayer
                             }
                         }
                         RemoveSelectedSongs(lbSongsView, tvArtistsView, albumView);
-                        //Artists[artist.Name].Albums[album.Name].Songs.Remove(song.Number);
                     }
                     break;
                 default:
@@ -327,9 +322,7 @@ namespace Media_PLayer
                 case 1:
                     foreach (var artist in artists)
                     {
-                        //var album = (Album) remove.Parent.Tag;
                         var song = (Song) remove.Tag;
-                        //artist.Value.Albums[album.Name].Songs.Remove(song.Number);
 
                         for (var i = 0; i < lbSongsView.Items.Count; i++)
                         {
@@ -346,6 +339,12 @@ namespace Media_PLayer
                     return;
             }
             CheckForDeleted(lbSongsView, tvArtistView, tvAlbumView);
+        }
+
+        public void Clear()
+        {
+            Artists = new Dictionary<string, Artist>();
+            
         }
     }
 }
