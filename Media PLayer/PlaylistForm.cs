@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using Media_Player.Structures;
 
 namespace Media_PLayer
 {
@@ -18,21 +15,16 @@ namespace Media_PLayer
 
     public partial class PlaylistForm : Form
     {
-        
+        private string _fileName;
         public Playlist Playlist { get; set; }
         private ViewMode ViewMode { get; set; }
 
-        private string _fileName;
-        private EventHandler<PlaylistPlayClickedEventArgs> PlayClickedEventHandler { get; set; }
-
-        public PlaylistForm(EventHandler<PlaylistPlayClickedEventArgs> playClickedEventHandler)
+        public PlaylistForm()
         {
             InitializeComponent();
             ViewMode = ViewMode.Songs;
             tvArtistsView.Hide();
             tvAlbumsView.Hide();
-            PlayClickedEventHandler = playClickedEventHandler;
-            
             Playlist = new Playlist();
         }
 
@@ -48,9 +40,7 @@ namespace Media_PLayer
             if (ofd.ShowDialog() != DialogResult.OK) return;
             foreach (var fileName in ofd.FileNames)
                 Playlist.AddSong(fileName);
-            Playlist.ShowArtistsOnTreeView(tvArtistsView);
-            Playlist.ShowSongsOnControl(lbSongsView);
-            Playlist.ShowAlbumsOnTreeView(tvAlbumsView);
+            FillComponents();
             switch (ViewMode)
             {
                 case ViewMode.Songs:
@@ -69,6 +59,13 @@ namespace Media_PLayer
                     tvAlbumsView.Show();
                     break;
             }
+        }
+
+        private void FillComponents()
+        {
+            Playlist.ShowArtistsOnTreeView(tvArtistsView);
+            Playlist.ShowSongsOnControl(lbSongsView);
+            Playlist.ShowAlbumsOnTreeView(tvAlbumsView);
         }
 
         private void btnShowSongs_Click(object sender, EventArgs e)
@@ -110,6 +107,10 @@ namespace Media_PLayer
 
         private void tbSearchBar_TextChanged(object sender, EventArgs e)
         {
+            tvArtistsView.Hide();
+            tvAlbumsView.Hide();
+            lbSongsView.Show();
+            ViewMode = ViewMode.Songs;
             Playlist.Search(tbSearchBar.Text, lbSongsView);
         }
 
@@ -119,7 +120,7 @@ namespace Media_PLayer
             {
                 case (Keys.Control | Keys.F):
                     tbSearchBar.Focus();
-                    break;//return true;
+                    break; //return true;
                 case (Keys.Control | Keys.A):
                     switch (ViewMode)
                     {
@@ -129,7 +130,6 @@ namespace Media_PLayer
                         case ViewMode.Artists:
                             SelectAllSongs(tvArtistsView);
                             break;
-
                         case ViewMode.Albums:
                             SelectAllSongs(tvAlbumsView);
                             break;
@@ -145,10 +145,24 @@ namespace Media_PLayer
 
         private void RemoveSelectedItems()
         {
+            switch (ViewMode)
+            {
+                case ViewMode.Songs:
+                    Playlist.RemoveSelectedSongs(lbSongsView, tvArtistsView, tvAlbumsView);
+                    break;
+                case ViewMode.Artists:
+                    Playlist.RemoveSelectedSongs(tvArtistsView, lbSongsView, tvAlbumsView);
+                    break;
+                case ViewMode.Albums:
+                    Playlist.RemoveSelectedSongs(tvAlbumsView, tvArtistsView, lbSongsView);
+                    break;
+                default:
+                    return;
+            }
             //TODO: Remove selected items (if any) from the playlist Dictionary and all the controls 
         }
 
-        public void SaveFile()
+        private void SaveFile()
         {
             if (_fileName is null)
             {
@@ -178,7 +192,7 @@ namespace Media_PLayer
             LoadFile();
         }
 
-        public void LoadFile()
+        private void LoadFile()
         {
             var openFileDialog = new OpenFileDialog()
             {
@@ -193,6 +207,7 @@ namespace Media_PLayer
                 {
                     IFormatter formater = new BinaryFormatter();
                     Playlist = (Playlist) formater.Deserialize(fileStream);
+                    FillComponents();
                 }
             }
             catch (Exception)
@@ -204,11 +219,20 @@ namespace Media_PLayer
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(ViewMode == ViewMode.Songs)
-                SelectAllSongs(lbSongsView);
-            else if (ViewMode == ViewMode.Artists)
-                SelectAllSongs(tvArtistsView);
-            else SelectAllSongs(tvAlbumsView);
+            switch (ViewMode)
+            {
+                case ViewMode.Songs:
+                    SelectAllSongs(lbSongsView);
+                    break;
+                case ViewMode.Artists:
+                    SelectAllSongs(tvArtistsView);
+                    break;
+                case ViewMode.Albums:
+                    SelectAllSongs(tvAlbumsView);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
 
@@ -216,39 +240,17 @@ namespace Media_PLayer
         {
             if (control.GetType() == typeof(ListBox))
             {
-                ListBox lb = (ListBox) control;
+                var lb = (ListBox) control;
                 for (var i = 0; i < lb.Items.Count; i++)
                     lb.SetSelected(i, true);
             }
-            //TODO: Select all files in tvArtistView and tvAlbumsVieww
-
-            else if (control.GetType() == typeof(TreeView))
-            {
-
-            }
             else
             {
-                
-            }
-            
-        }
-
-        private void allSongsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(Playlist.AllSongs));
-        }
-
-        private void removeAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //TODO: delete all songs from everywhere
-        }
-
-        private void selectedSongsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (lbSongsView.SelectedIndices.Count > 0)
-            {
-                var selectedSongs = lbSongsView.SelectedItems.Cast<Song>().ToList();
-                PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(selectedSongs));
+                tvArtistsView.Hide();
+                tvAlbumsView.Hide();
+                lbSongsView.Show();
+                ViewMode = ViewMode.Songs;
+                SelectAllSongs(lbSongsView);
             }
         }
     }
