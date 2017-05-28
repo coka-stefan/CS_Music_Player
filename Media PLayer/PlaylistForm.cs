@@ -56,8 +56,6 @@ namespace Media_PLayer
                     tvArtistsView.Show();
                     break;
                 case ViewMode.Albums:
-                    break;
-                default:
                     lbSongsView.Hide();
                     tvArtistsView.Hide();
                     tvAlbumsView.Show();
@@ -99,7 +97,7 @@ namespace Media_PLayer
 
         private void tvArtistsView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Playlist.PlaySong(e, Parent);
+            //TODO: transport the selected item(s) into the main form to be played
         }
 
         private void tbSearchBar_TextChanged(object sender, EventArgs e)
@@ -113,46 +111,46 @@ namespace Media_PLayer
             {
                 case (Keys.Control | Keys.F):
                     tbSearchBar.Focus();
-                    return true;
+                    break;//return true;
                 case (Keys.Control | Keys.A):
                     switch (ViewMode)
                     {
                         case ViewMode.Songs:
-                            for (var i = lbSongsView.Items.Count - 1; i >= 0; i--)
-                            {
-                                lbSongsView.SetSelected(i, true);
-                            }
+                            SelectAllSongs(lbSongsView);
                             break;
                         case ViewMode.Artists:
-                            for (var i = tvArtistsView.Nodes.Count - 1; i >= 0; i--)
-                            {
-                                //TODO: Not implemented
-                            }
+                            SelectAllSongs(tvArtistsView);
                             break;
 
                         case ViewMode.Albums:
+                            SelectAllSongs(tvAlbumsView);
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
                     }
+                    break;
+                case (Keys.Delete):
+                    RemoveSelectedItems();
                     break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+
+        private void RemoveSelectedItems()
+        {
+            //TODO: Remove selected items (if any) from the playlist Dictionary and all the controls 
         }
 
         public void SaveFile()
         {
             if (_fileName is null)
             {
-                var saveFileDialog = new SaveFileDialog
+                var saveFileDialog = new SaveFileDialog()
                 {
-                    Filter = "Playlist file (*.plst)|*.plst",
-                    Title = "Save playlist"
+                    Filter = @"Playlist file (*.plst)|*.plst",
+                    Title = @"Save playlist"
                 };
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
                     _fileName = saveFileDialog.FileName;
-                }
             }
             if (_fileName == null) return;
             using (var fileStream = new FileStream(_fileName, FileMode.Create))
@@ -162,12 +160,22 @@ namespace Media_PLayer
             }
         }
 
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadFile();
+        }
+
         public void LoadFile()
         {
-            var openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog()
             {
-                Filter = "Playlist file (*.plst)|*.plst",
-                Title = "Save playlist"
+                Filter = @"Playlist file (*.plst)|*.plst",
+                Title = @"Save playlist"
             };
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             _fileName = openFileDialog.FileName;
@@ -181,19 +189,39 @@ namespace Media_PLayer
             }
             catch (Exception)
             {
-                MessageBox.Show("Could not read file: " + _fileName);
+                MessageBox.Show(@"Could not read file: " + _fileName);
                 _fileName = null;
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            if(ViewMode == ViewMode.Songs)
+                SelectAllSongs(lbSongsView);
+            else if (ViewMode == ViewMode.Artists)
+                SelectAllSongs(tvArtistsView);
+            else SelectAllSongs(tvAlbumsView);
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void SelectAllSongs(Control control)
         {
-            LoadFile();
+            if (control.GetType() == typeof(ListBox))
+            {
+                ListBox lb = (ListBox) control;
+                for (var i = 0; i < lb.Items.Count; i++)
+                    lb.SetSelected(i, true);
+            }
+            //TODO: Select all files in tvArtistView and tvAlbumsVieww
+            else if (control.GetType() == typeof(TreeView))
+            {
+
+            }
+            else
+            {
+                
+            }
+            
         }
     }
 }
