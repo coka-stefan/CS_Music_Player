@@ -40,7 +40,7 @@ namespace Media_Player.Structures
 
         public override string ToString()
         {
-            return string.Format("{0,20}({2})", Name, Year);
+            return $"{Name,20}({Year})";
         }
     }
 }

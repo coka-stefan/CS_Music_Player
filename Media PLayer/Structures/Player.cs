@@ -87,12 +87,9 @@ namespace Media_Player.Structures
                 CurrentPosition = _player.controls.currentPosition;
                 return true;
             }
-            if (IsPaused)
-            {
-                Resume(CurrentPosition);
-                return false;
-            }
-           return false;
+            if (!IsPaused) return false;
+            Resume(CurrentPosition);
+            return false;
         }
 
         public void Stop()
@@ -115,8 +112,8 @@ namespace Media_Player.Structures
 
         public int Volume
         {
-            get { return _player.settings.volume; }
-            set { _player.settings.volume = value; }
+            get => _player.settings.volume;
+            set => _player.settings.volume = value;
         }
 
         public bool Mute()

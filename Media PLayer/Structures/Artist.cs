@@ -33,7 +33,7 @@ namespace Media_Player
             get
             {
                 var songs = new List<Song>();
-                foreach (Album album in Albums.Values)
+                foreach (var album in Albums.Values)
                 {
                     songs.AddRange(album.Songs.Values);
                 }

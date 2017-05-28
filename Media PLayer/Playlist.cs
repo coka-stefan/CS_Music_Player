@@ -45,7 +45,7 @@ namespace Media_PLayer
             {
                 artist.Songs.ForEach(song =>
                 {
-                    if(!listBox.Items.Contains(song))
+                    if (!listBox.Items.Contains(song))
                         listBox.Items.Add(song);
                 });
             }
@@ -202,9 +202,9 @@ namespace Media_PLayer
         {
             //TODO: Play song from e
 
-           // MessageBox.Show(@"NOT IMPLEMENTED YET Should play " + e.Node.Text);
+            // MessageBox.Show(@"NOT IMPLEMENTED YET Should play " + e.Node.Text);
 
-         //   var songToPlay = (Song) e.Node.Tag;
+            //   var songToPlay = (Song) e.Node.Tag;
         }
 
         public void Search(string pattern, ListBox lb)
@@ -212,12 +212,123 @@ namespace Media_PLayer
             lb.DataSource = (from artist in Artists.Values
                 from album in artist.Albums.Values
                 from song in album.Songs.Values
-                where song.Title.ToLower().Contains(pattern.ToLower()) 
-                    || song.Artist.ToLower().Contains(pattern.ToLower()) 
-                    || song.Album.ToLower().Contains(pattern.ToLower())
+                where song.Title.ToLower().Contains(pattern.ToLower())
+                      || song.Artist.ToLower().Contains(pattern.ToLower())
+                      || song.Album.ToLower().Contains(pattern.ToLower())
                 select song).ToList();
+        }
 
-            //lb.Items.Add("Item");
+        public void RemoveSelectedSongs(ListBox lbSongsView, TreeView artistView, TreeView albumView)
+        {
+            var songsToRemove = lbSongsView.SelectedItems;
+
+            foreach (var song in songsToRemove)
+            {
+                foreach (var artist in Artists.Values)
+                {
+                    foreach (var album in artist.Albums.Values)
+                    {
+                        var tmp = new Dictionary<uint, Song>(album.Songs);
+                        foreach (var albumSong in tmp)
+                        {
+                            if (albumSong.Value == song)
+                                album.Songs.Remove(albumSong.Key);
+                        }
+                    }
+                }
+            }
+
+            CheckForDeleted(lbSongsView, artistView, albumView);
+        }
+
+        private void CheckForDeleted(ListBox lbSongsView, TreeView artistView, TreeView albumView)
+        {
+            var artists = new Dictionary<string, Artist>(Artists);
+            foreach (var artist in artists)
+            {
+                if (artist.Value.Albums.Count == 0)
+                    Artists.Remove(artist.Key);
+                else
+                {
+                    var albums = new Dictionary<string, Album>(artist.Value.Albums);
+                    foreach (var album in albums)
+                    {
+                        if (album.Value.Songs.Count != 0) continue;
+                        artist.Value.Albums.Remove(album.Key);
+                        CheckForDeleted(lbSongsView, artistView, albumView);
+                    }
+                }
+            }
+
+            lbSongsView.Items.Clear();
+            artistView.Nodes.Clear();
+            albumView.Nodes.Clear();
+            ShowAlbumsOnTreeView(albumView);
+            ShowArtistsOnTreeView(artistView);
+            ShowSongsOnControl(lbSongsView);
+        }
+
+        public void RemoveSelectedSongs(TreeView tvArtistsView, ListBox lbSongsView, TreeView albumView)
+        {
+            var remove = tvArtistsView.SelectedNode;
+
+            switch (remove.Level)
+            {
+                case 0:
+                    {
+                        var artist = (Artist)remove.Tag;
+                        Artists.Remove(artist.Name);
+                    }
+                    break;
+                case 1:
+                    {
+                        var album = (Album)remove.Tag;
+                        var artist = (Artist)remove.Parent.Tag;
+                        Artists[artist.Name].Albums.Remove(album.Name);
+                    }
+                    break;
+                case 2:
+                    {
+                        var album = (Album)remove.Parent.Tag;
+                        var artist = (Artist)remove.Parent.Parent.Tag;
+                        var song = (Song)remove.Tag;
+
+                        //TODO: replace song.Number with correct key
+                        Artists[artist.Name].Albums[album.Name].Songs.Remove(song.Number);
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            CheckForDeleted(lbSongsView, tvArtistsView, albumView);
+        }
+
+        public void RemoveSelectedSongs(TreeView tvAlbumView, TreeView tvArtistView, ListBox lbSongsView)
+        {
+            var remove = tvAlbumView.SelectedNode;
+            var artists = new Dictionary<string, Artist>(Artists);
+
+            switch (remove.Level)
+            {
+                case 0:
+                    foreach (var artist in artists)
+                    {
+                        artist.Value.Albums.Remove(remove.Name);
+                    }
+                    break;
+                case 1:
+                    foreach (var artist in artists)
+                    {
+                        var album = (Album) remove.Parent.Tag;
+                        var song = (Song) remove.Tag;
+                        artist.Value.Albums[album.Name].Songs.Remove(song.Number);
+                    }
+                    break;
+                default:
+                    return;
+            }
+            CheckForDeleted(lbSongsView, tvArtistView, tvAlbumView);
         }
     }
 }
