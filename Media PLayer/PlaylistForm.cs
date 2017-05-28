@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace Media_PLayer
 {
@@ -20,7 +15,8 @@ namespace Media_PLayer
 
     public partial class PlaylistForm : Form
     {
-        public Playlist Playlist { get; }
+        private string _fileName;
+        public Playlist Playlist { get; set; }
         private ViewMode ViewMode { get; set; }
 
         public PlaylistForm()
@@ -34,7 +30,7 @@ namespace Media_PLayer
 
         private void songsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            var ofd = new OpenFileDialog
             {
                 Filter =
                     @"All files (*.flac, *.mp3, *.wav)|*.flac;*.mp3;*.wav|Mp3 files(*.mp3)|*.mp3|Flac files (*.flac)|*.flac|Wav files (*.wav)|*.wav",
@@ -59,6 +55,8 @@ namespace Media_PLayer
                     tvAlbumsView.Hide();
                     tvArtistsView.Show();
                     break;
+                case ViewMode.Albums:
+                    break;
                 default:
                     lbSongsView.Hide();
                     tvArtistsView.Hide();
@@ -69,35 +67,29 @@ namespace Media_PLayer
 
         private void btnShowSongs_Click(object sender, EventArgs e)
         {
-            if (ViewMode != ViewMode.Songs)
-            {
-                tvArtistsView.Hide();
-                tvAlbumsView.Hide();
-                lbSongsView.Show();
-                ViewMode = ViewMode.Songs;
-            }
+            if (ViewMode == ViewMode.Songs) return;
+            tvArtistsView.Hide();
+            tvAlbumsView.Hide();
+            lbSongsView.Show();
+            ViewMode = ViewMode.Songs;
         }
 
         private void btnShowArtists_Click(object sender, EventArgs e)
         {
-            if (ViewMode != ViewMode.Artists)
-            {
-                lbSongsView.Hide();
-                tvAlbumsView.Hide();
-                tvArtistsView.Show();
-                ViewMode = ViewMode.Artists;
-            }
+            if (ViewMode == ViewMode.Artists) return;
+            lbSongsView.Hide();
+            tvAlbumsView.Hide();
+            tvArtistsView.Show();
+            ViewMode = ViewMode.Artists;
         }
 
         private void btnShowAlbums_Click(object sender, EventArgs e)
         {
-            if (ViewMode != ViewMode.Albums)
-            {
-                lbSongsView.Hide();
-                tvArtistsView.Hide();
-                tvAlbumsView.Show();
-                ViewMode = ViewMode.Albums;
-            }
+            if (ViewMode == ViewMode.Albums) return;
+            lbSongsView.Hide();
+            tvArtistsView.Hide();
+            tvAlbumsView.Show();
+            ViewMode = ViewMode.Albums;
         }
 
         private void tvArtistsView_DoubleClick(object sender, EventArgs e)
@@ -115,6 +107,93 @@ namespace Media_PLayer
             Playlist.Search(tbSearchBar.Text, lbSongsView);
         }
 
-       
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case (Keys.Control | Keys.F):
+                    tbSearchBar.Focus();
+                    return true;
+                case (Keys.Control | Keys.A):
+                    switch (ViewMode)
+                    {
+                        case ViewMode.Songs:
+                            for (var i = lbSongsView.Items.Count - 1; i >= 0; i--)
+                            {
+                                lbSongsView.SetSelected(i, true);
+                            }
+                            break;
+                        case ViewMode.Artists:
+                            for (var i = tvArtistsView.Nodes.Count - 1; i >= 0; i--)
+                            {
+                                //TODO: Not implemented
+                            }
+                            break;
+
+                        case ViewMode.Albums:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        public void SaveFile()
+        {
+            if (_fileName is null)
+            {
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Playlist file (*.plst)|*.plst",
+                    Title = "Save playlist"
+                };
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    _fileName = saveFileDialog.FileName;
+                }
+            }
+            if (_fileName == null) return;
+            using (var fileStream = new FileStream(_fileName, FileMode.Create))
+            {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fileStream, Playlist);
+            }
+        }
+
+        public void LoadFile()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Playlist file (*.plst)|*.plst",
+                Title = "Save playlist"
+            };
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+            _fileName = openFileDialog.FileName;
+            try
+            {
+                using (var fileStream = new FileStream(_fileName, FileMode.Open))
+                {
+                    IFormatter formater = new BinaryFormatter();
+                    Playlist = (Playlist) formater.Deserialize(fileStream);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Could not read file: " + _fileName);
+                _fileName = null;
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadFile();
+        }
     }
 }

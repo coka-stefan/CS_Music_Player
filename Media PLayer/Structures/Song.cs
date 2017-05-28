@@ -2,6 +2,7 @@
 
 namespace Media_Player.Structures
 {
+    [Serializable]
     public class Song
     {
         public string Title { get; set; }

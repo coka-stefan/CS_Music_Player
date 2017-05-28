@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Media_Player.Structures
 {
+    [Serializable]
     public class Album
     {
         public string Name { get; set; }

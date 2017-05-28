@@ -10,6 +10,7 @@ using Media_Player.Structures;
 
 namespace Media_PLayer
 {
+    [Serializable]
     public class Playlist
     {
         private Dictionary<string, Artist> Artists { get; }

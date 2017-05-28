@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Media_Player.Structures;
 
 namespace Media_Player
 {
+    [Serializable]
     public class Artist
     {
         public string Name { get; set; }
