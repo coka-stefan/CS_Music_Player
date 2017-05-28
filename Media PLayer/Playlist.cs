@@ -289,12 +289,19 @@ namespace Media_PLayer
                     break;
                 case 2:
                     {
-                        var album = (Album)remove.Parent.Tag;
-                        var artist = (Artist)remove.Parent.Parent.Tag;
+                        //var album = (Album)remove.Parent.Tag;
+                        //var artist = (Artist)remove.Parent.Parent.Tag;
                         var song = (Song)remove.Tag;
-
-                        //TODO: replace song.Number with correct key
-                        Artists[artist.Name].Albums[album.Name].Songs.Remove(song.Number);
+                        for (var i = 0; i < lbSongsView.Items.Count; i++)
+                        {
+                            lbSongsView.SetSelected(i, false);
+                            if (lbSongsView.Items[i] == song)
+                            {
+                                lbSongsView.SetSelected(i, true);
+                            }
+                        }
+                        RemoveSelectedSongs(lbSongsView, tvArtistsView, albumView);
+                        //Artists[artist.Name].Albums[album.Name].Songs.Remove(song.Number);
                     }
                     break;
                 default:
@@ -320,9 +327,19 @@ namespace Media_PLayer
                 case 1:
                     foreach (var artist in artists)
                     {
-                        var album = (Album) remove.Parent.Tag;
+                        //var album = (Album) remove.Parent.Tag;
                         var song = (Song) remove.Tag;
-                        artist.Value.Albums[album.Name].Songs.Remove(song.Number);
+                        //artist.Value.Albums[album.Name].Songs.Remove(song.Number);
+
+                        for (var i = 0; i < lbSongsView.Items.Count; i++)
+                        {
+                            lbSongsView.SetSelected(i,false);
+                            if (lbSongsView.Items[i] == song)
+                            {
+                                lbSongsView.SetSelected(i, true);
+                            }
+                        }
+                        RemoveSelectedSongs(lbSongsView, tvArtistView, tvAlbumView);
                     }
                     break;
                 default:

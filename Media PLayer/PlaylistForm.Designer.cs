@@ -81,26 +81,27 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -154,9 +155,9 @@
             this.groupBox1.Controls.Add(this.btnShowArtists);
             this.groupBox1.Controls.Add(this.btnShowSongs);
             this.groupBox1.Location = new System.Drawing.Point(16, 49);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(267, 684);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
@@ -165,7 +166,7 @@
             // btnShowAlbums
             // 
             this.btnShowAlbums.Location = new System.Drawing.Point(29, 191);
-            this.btnShowAlbums.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnShowAlbums.Margin = new System.Windows.Forms.Padding(4);
             this.btnShowAlbums.Name = "btnShowAlbums";
             this.btnShowAlbums.Size = new System.Drawing.Size(217, 53);
             this.btnShowAlbums.TabIndex = 4;
@@ -176,7 +177,7 @@
             // btnShowArtists
             // 
             this.btnShowArtists.Location = new System.Drawing.Point(29, 113);
-            this.btnShowArtists.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnShowArtists.Margin = new System.Windows.Forms.Padding(4);
             this.btnShowArtists.Name = "btnShowArtists";
             this.btnShowArtists.Size = new System.Drawing.Size(217, 53);
             this.btnShowArtists.TabIndex = 3;
@@ -187,7 +188,7 @@
             // btnShowSongs
             // 
             this.btnShowSongs.Location = new System.Drawing.Point(29, 37);
-            this.btnShowSongs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnShowSongs.Margin = new System.Windows.Forms.Padding(4);
             this.btnShowSongs.Name = "btnShowSongs";
             this.btnShowSongs.Size = new System.Drawing.Size(217, 53);
             this.btnShowSongs.TabIndex = 2;
@@ -200,7 +201,7 @@
             this.lbSongsView.FormattingEnabled = true;
             this.lbSongsView.ItemHeight = 16;
             this.lbSongsView.Location = new System.Drawing.Point(291, 81);
-            this.lbSongsView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lbSongsView.Margin = new System.Windows.Forms.Padding(4);
             this.lbSongsView.Name = "lbSongsView";
             this.lbSongsView.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lbSongsView.Size = new System.Drawing.Size(1051, 644);
@@ -209,7 +210,7 @@
             // tbSearchBar
             // 
             this.tbSearchBar.Location = new System.Drawing.Point(1209, 49);
-            this.tbSearchBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbSearchBar.Margin = new System.Windows.Forms.Padding(4);
             this.tbSearchBar.Name = "tbSearchBar";
             this.tbSearchBar.Size = new System.Drawing.Size(132, 22);
             this.tbSearchBar.TabIndex = 2;
@@ -228,7 +229,7 @@
             // tvArtistsView
             // 
             this.tvArtistsView.Location = new System.Drawing.Point(291, 81);
-            this.tvArtistsView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tvArtistsView.Margin = new System.Windows.Forms.Padding(4);
             this.tvArtistsView.Name = "tvArtistsView";
             this.tvArtistsView.Size = new System.Drawing.Size(1051, 644);
             this.tvArtistsView.TabIndex = 4;
@@ -238,7 +239,7 @@
             // tvAlbumsView
             // 
             this.tvAlbumsView.Location = new System.Drawing.Point(291, 81);
-            this.tvAlbumsView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tvAlbumsView.Margin = new System.Windows.Forms.Padding(4);
             this.tvAlbumsView.Name = "tvAlbumsView";
             this.tvAlbumsView.Size = new System.Drawing.Size(1051, 644);
             this.tvAlbumsView.TabIndex = 5;
@@ -256,7 +257,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "PlaylistForm";
             this.Text = "Playlist";
             this.menuStrip1.ResumeLayout(false);

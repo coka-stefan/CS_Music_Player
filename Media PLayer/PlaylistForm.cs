@@ -138,8 +138,43 @@ namespace Media_PLayer
                 case (Keys.Delete):
                     RemoveSelectedItems();
                     break;
+                case (Keys.Escape):
+                    switch (ViewMode)
+                    {
+                        case ViewMode.Songs:
+                            DeselectAllSongs(lbSongsView);
+                            break;
+                        case ViewMode.Artists:
+                            DeselectAllSongs(tvArtistsView);
+                            break;
+                        case ViewMode.Albums:
+                            DeselectAllSongs(tvAlbumsView);
+                            break;
+                    }
+                    break;
+                case Keys.Enter:
+                    //TODO: Play selected songs
+                    break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void DeselectAllSongs(Control control)
+        {
+            if (control.GetType() == typeof(ListBox))
+            {
+                var lb = (ListBox)control;
+                for (var i = 0; i < lb.Items.Count; i++)
+                    lb.SetSelected(i, false);
+            }
+            else
+            {
+                tvArtistsView.Hide();
+                tvAlbumsView.Hide();
+                lbSongsView.Show();
+                ViewMode = ViewMode.Songs;
+                DeselectAllSongs(lbSongsView);
+            }
         }
 
 
@@ -184,6 +219,7 @@ namespace Media_PLayer
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _fileName = null;
             SaveFile();
         }
 
@@ -252,6 +288,11 @@ namespace Media_PLayer
                 ViewMode = ViewMode.Songs;
                 SelectAllSongs(lbSongsView);
             }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
         }
     }
 }
