@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Media_Player.Structures;
 using Media_PLayer;
 
@@ -258,6 +260,7 @@ namespace Media_Player
 
         private void MainForm_PlayListPlayClicked(object sender, PlaylistPlayClickedEventArgs e)
         {
+            Focus();
             ClearGui();
             UrlToIndex.Clear();
             List<MusicFile> musicFiles = new List<MusicFile>();
@@ -269,6 +272,7 @@ namespace Media_Player
                 UrlToIndex.Add(mf.Url, lbOpenedFiles.Items.Count - 1);
             });
             Player.PlayMusicFiles(musicFiles, true);
+
         }
 
 
@@ -280,6 +284,30 @@ namespace Media_Player
         protected virtual void OnPlayListPlayClicked(PlaylistPlayClickedEventArgs e)
         {
             PlayListPlayClicked?.Invoke(this, e);
+        }
+
+        private void playlistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                Filter = @"Playlist file (*.plst)|*.plst",
+                Title = @"Save playlist"
+            };
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+            try
+            {
+                using (var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open))
+                {
+                    IFormatter formater = new BinaryFormatter();
+                    Playlist playlist = (Playlist)formater.Deserialize(fileStream);
+                    PlaylistForm pf = new PlaylistForm(PlayListPlayClicked, playlist);
+                    pf.Show();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(@"Could not read file: " + openFileDialog.FileName);
+            }
         }
     }
 }

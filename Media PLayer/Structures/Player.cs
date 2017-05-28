@@ -79,7 +79,12 @@ namespace Media_Player.Structures
 
         public string CurrentMediaTimeRemaining()
         {
-            return TimeSpan.FromMinutes(_player.controls.currentItem.duration - _player.controls.currentPosition).ToString().Substring(0, 5);
+            if (_player.controls.currentItem != null)
+                return
+                    TimeSpan.FromMinutes(_player.controls.currentItem.duration - _player.controls.currentPosition)
+                        .ToString()
+                        .Substring(0, 5);
+            else return "";
         }
 
        private void Resume(double position)

@@ -117,21 +117,21 @@
             // songsToolStripMenuItem
             // 
             this.songsToolStripMenuItem.Name = "songsToolStripMenuItem";
-            this.songsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.songsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.songsToolStripMenuItem.Text = "Add";
             this.songsToolStripMenuItem.Click += new System.EventHandler(this.songsToolStripMenuItem_Click);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeAllToolStripMenuItem.Text = "Delete All";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.removeAllToolStripMenuItem_Click);
             // 
