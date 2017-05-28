@@ -129,6 +129,7 @@
             this.playlistToolStripMenuItem.Name = "playlistToolStripMenuItem";
             this.playlistToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.playlistToolStripMenuItem.Text = "Open Playlist";
+            this.playlistToolStripMenuItem.Click += new System.EventHandler(this.playlistToolStripMenuItem_Click);
             // 
             // playlistToolStripMenuItem1
             // 
@@ -141,7 +142,7 @@
             // playlistToolStripMenuItem2
             // 
             this.playlistToolStripMenuItem2.Name = "playlistToolStripMenuItem2";
-            this.playlistToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.playlistToolStripMenuItem2.Size = new System.Drawing.Size(111, 22);
             this.playlistToolStripMenuItem2.Text = "Playlist";
             this.playlistToolStripMenuItem2.Click += new System.EventHandler(this.playlistToolStripMenuItem2_Click);
             // 

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Media_Player;
 using Media_Player.Structures;
@@ -15,6 +12,18 @@ namespace Media_PLayer
     {
         private Dictionary<string, Artist> Artists { get; set; }
 
+        public List<Song> AllSongs
+        {
+            get
+            {
+                var songs = new List<Song>();
+                foreach (Artist artist in Artists.Values)
+                {
+                    songs.AddRange(artist.Songs);
+                }
+                return songs;
+            }
+        }
         public Playlist()
         {
             Artists = new Dictionary<string, Artist>();
@@ -195,16 +204,6 @@ namespace Media_PLayer
                 }
             }
         }
-
-        public static void PlaySong(TreeNodeMouseClickEventArgs e, Control parent)
-        {
-            //TODO: Play song from e
-
-            // MessageBox.Show(@"NOT IMPLEMENTED YET Should play " + e.Node.Text);
-
-            //   var songToPlay = (Song) e.Node.Tag;
-        }
-
         public void Search(string pattern, ListBox lb)
         {
             lb.DataSource = (from artist in Artists.Values
@@ -344,7 +343,11 @@ namespace Media_PLayer
         public void Clear()
         {
             Artists = new Dictionary<string, Artist>();
-            
+        }
+
+        public void RemoveSongs()
+        {
+            Artists.Clear();
         }
     }
 }
