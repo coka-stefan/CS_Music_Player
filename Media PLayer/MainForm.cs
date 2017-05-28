@@ -17,6 +17,7 @@ namespace Media_Player
         private Dictionary<string, int> UrlToIndex { get; set; }
         private Timer Timer { get; }
         private event EventHandler<CurrentMediaChangedEventArgs> MediaChanged;
+        private event EventHandler<PlaylistPlayClickedEventArgs> PlayListPlayClicked;
         private TimeMode TimeMode { get; set; }
 
         public MainForm()
@@ -25,12 +26,13 @@ namespace Media_Player
             UrlToIndex = new Dictionary<string, int>();
             lblVolume.Text = tbVolume.Value.ToString();
             MediaChanged += MainForm_MediaChanged;
+            PlayListPlayClicked += MainForm_PlayListPlayClicked;
             Player = new Player(MediaChanged) {Volume = tbVolume.Value};
             Timer = new Timer() {Interval = 1000};
             Timer.Tick += Timer_Tick;
             TimeMode = TimeMode.Remaining;
         }
-            
+
         private void OpenMusicFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog
@@ -176,11 +178,6 @@ namespace Media_Player
                 Player.Next();
         }
 
-        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
-        {
-            MediaChanged?.Invoke(this, e);
-        }
-
         private void MainForm_MediaChanged(object sender, CurrentMediaChangedEventArgs e)
         {
             if (TimeMode == TimeMode.Remaining)
@@ -254,8 +251,35 @@ namespace Media_Player
 
         private void playlistToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            PlaylistForm pf = new PlaylistForm();
+            PlaylistForm pf = new PlaylistForm(PlayListPlayClicked);
             pf.Show();
+        }
+
+
+        private void MainForm_PlayListPlayClicked(object sender, PlaylistPlayClickedEventArgs e)
+        {
+            ClearGui();
+            UrlToIndex.Clear();
+            List<MusicFile> musicFiles = new List<MusicFile>();
+            e.SongsToBePlayed.ForEach(song =>
+            {
+                MusicFile mf = new MusicFile(song);
+                musicFiles.Add(mf);
+                lbOpenedFiles.Items.Add(mf);
+                UrlToIndex.Add(mf.Url, lbOpenedFiles.Items.Count - 1);
+            });
+            Player.PlayMusicFiles(musicFiles, true);
+        }
+
+
+        protected virtual void OnMediaChanged(CurrentMediaChangedEventArgs e)
+        {
+            MediaChanged?.Invoke(this, e);
+        }
+
+        protected virtual void OnPlayListPlayClicked(PlaylistPlayClickedEventArgs e)
+        {
+            PlayListPlayClicked?.Invoke(this, e);
         }
     }
 }

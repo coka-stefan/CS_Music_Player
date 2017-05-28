@@ -40,11 +40,20 @@ namespace Media_Player.Structures
 
         public void PlayMusicFiles(List<MusicFile> musicFiles, bool newPlaylist)
         {
-            Stop();
-            CurrentPlayList = _player.playlistCollection.newPlaylist("newSongs");
-            musicFiles.ForEach(mFile => CurrentPlayList.appendItem(_player.newMedia(mFile.Url)));
-            _player.currentPlaylist = CurrentPlayList;
-            _player.controls.play();
+            if (newPlaylist)
+            {
+                Stop();
+                CurrentPlayList = _player.playlistCollection.newPlaylist("newSongs");
+                musicFiles.ForEach(mFile => CurrentPlayList.appendItem(_player.newMedia(mFile.Url)));
+                _player.currentPlaylist = CurrentPlayList;
+                _player.controls.play();
+            }
+            else
+            {
+                musicFiles.ForEach(mFile => CurrentPlayList.appendItem(_player.newMedia(mFile.Url)));
+            }
+            
+            
         }
 
         public void PlayMusicFile(MusicFile media)

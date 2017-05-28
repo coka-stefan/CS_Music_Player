@@ -15,6 +15,18 @@ namespace Media_PLayer
     {
         private Dictionary<string, Artist> Artists { get; }
 
+        public List<Song> AllSongs
+        {
+            get
+            {
+                var songs = new List<Song>();
+                foreach (Artist artist in Artists.Values)
+                {
+                    songs.AddRange(artist.Songs);
+                }
+                return songs;
+            }
+        }
         public Playlist()
         {
             Artists = new Dictionary<string, Artist>();

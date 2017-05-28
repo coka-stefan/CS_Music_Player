@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using Media_Player.Structures;
 
 namespace Media_PLayer
 {
@@ -15,16 +18,21 @@ namespace Media_PLayer
 
     public partial class PlaylistForm : Form
     {
-        private string _fileName;
+        
         public Playlist Playlist { get; set; }
         private ViewMode ViewMode { get; set; }
 
-        public PlaylistForm()
+        private string _fileName;
+        private EventHandler<PlaylistPlayClickedEventArgs> PlayClickedEventHandler { get; set; }
+
+        public PlaylistForm(EventHandler<PlaylistPlayClickedEventArgs> playClickedEventHandler)
         {
             InitializeComponent();
             ViewMode = ViewMode.Songs;
             tvArtistsView.Hide();
             tvAlbumsView.Hide();
+            PlayClickedEventHandler = playClickedEventHandler;
+            
             Playlist = new Playlist();
         }
 
@@ -213,6 +221,7 @@ namespace Media_PLayer
                     lb.SetSelected(i, true);
             }
             //TODO: Select all files in tvArtistView and tvAlbumsVieww
+
             else if (control.GetType() == typeof(TreeView))
             {
 
@@ -222,6 +231,25 @@ namespace Media_PLayer
                 
             }
             
+        }
+
+        private void allSongsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(Playlist.AllSongs));
+        }
+
+        private void removeAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO: delete all songs from everywhere
+        }
+
+        private void selectedSongsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lbSongsView.SelectedIndices.Count > 0)
+            {
+                var selectedSongs = lbSongsView.SelectedItems.Cast<Song>().ToList();
+                PlayClickedEventHandler.Invoke(this, new PlaylistPlayClickedEventArgs(selectedSongs));
+            }
         }
     }
 }
